@@ -1,0 +1,56 @@
+<div class="product-detail-container">
+
+  <button
+    (click)="router.navigate(['/products'])"
+    class="back-button"
+  >
+    ← Back to Products
+  </button>
+
+  @if (loading) {
+    <div class="loading">Loading product details...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else if (product) {
+    <div class="product-detail">
+      <div class="product-image">
+        <img
+          [src]="ASSET_BASE_URL + product.imageUrl[0]"
+          [alt]="product.name"
+          class="main-image"
+        >
+      </div>
+
+      <div class="product-info">
+        <h1>{{ product.name }}</h1>
+        <div class="price">${{ product.price | number:'1.2-2' }}</div>
+        
+        <div class="stock-status" [class.in-stock]="isInStock()" [class.out-of-stock]="!isInStock()">
+          <i class="fas {{ isInStock() ? 'fa-check-circle' : 'fa-times-circle' }}"></i>
+          {{ isInStock() ? 'In Stock' : 'Out of Stock' }}
+          <span *ngIf="product.stock > 0" class="stock-count">({{ product.stock }} available)</span>
+        </div>
+
+        <div class="description">
+          <h3>Description</h3>
+          <p>{{ product.description || 'No description available.' }}</p>
+        </div>
+
+        <div class="quantity-selector">
+          <button (click)="updateQuantity(-1)">-</button>
+          <span>{{ product?.items?.length || quantity }}</span>
+          <button (click)="updateQuantity(1)">+</button>
+        </div>
+
+        <button
+          (click)="addToCart()"
+          class="add-to-cart"
+          [class.disabled]="!isInStock()"
+          [disabled]="!isInStock()"
+        >
+          {{ isInStock() ? 'Add to Cart' : 'Out of Stock' }}
+        </button>
+      </div>
+    </div>
+  }
+</div>

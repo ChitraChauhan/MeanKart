@@ -1,0 +1,155 @@
+<div class="profile-container">
+  <div class="profile-card">
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <i class="fas fa-user-circle text-5xl text-indigo-600"></i>
+      </div>
+      <h2 class="profile-title">My Profile</h2>
+    </div>
+
+  <!-- Profile Form -->
+  <div class="form-section">
+    <h3 class="form-section-title">
+      <i class="fas fa-user-edit mr-2"></i>Personal Information
+    </h3>
+    <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="space-y-5">
+      <div class="form-group">
+        <label for="name" class="form-label">Full Name</label>
+        <div class="input-group">
+          <i class="fas fa-user input-icon"></i>
+          <input 
+            type="text" 
+            id="name" 
+            formControlName="name"
+            class="form-input"
+            placeholder="Enter your full name"
+            [ngClass]="{'input-error': profileForm.get('name')?.invalid && profileForm.get('name')?.touched}">
+        </div>
+        <div *ngIf="profileForm.get('name')?.invalid && profileForm.get('name')?.touched" class="error-message">
+          <i class="fas fa-exclamation-circle mr-1"></i>
+          Name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email" class="form-label">Email Address</label>
+        <div class="input-group">
+          <i class="fas fa-envelope input-icon"></i>
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email" 
+            [disabled]="true"
+            class="form-input bg-gray-50"
+            placeholder="Your email address">
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2">
+        <button 
+          type="submit" 
+          [disabled]="!profileForm.valid || profileForm.pristine"
+          class="btn-primary"
+          [ngClass]="{'opacity-50 cursor-not-allowed': !profileForm.valid || profileForm.pristine}">
+          <i class="fas fa-save mr-2"></i>
+          {{ loading ? 'Saving...' : 'Save Changes' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Change Password Form -->
+  <div class="form-section border-t border-gray-100 pt-6 mt-8">
+    <h3 class="form-section-title">
+      <i class="fas fa-key mr-2"></i>Change Password
+    </h3>
+    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="space-y-5">
+      <div class="form-group">
+        <label for="currentPassword" class="form-label">Current Password</label>
+        <div class="input-group">
+          <i class="fas fa-lock input-icon"></i>
+          <input 
+            [type]="showCurrentPassword ? 'text' : 'password'"
+            id="currentPassword" 
+            formControlName="currentPassword"
+            class="form-input pr-10"
+            placeholder="Enter current password"
+            [ngClass]="{'input-error': passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched}">
+          <button 
+            type="button" 
+            (click)="togglePasswordVisibility('current')" 
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+            [attr.aria-label]="showCurrentPassword ? 'Hide password' : 'Show password'">
+            <i [class]="showCurrentPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+          </button>
+        </div>
+        <div *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched" class="error-message">
+          <i class="fas fa-exclamation-circle mr-1"></i>
+          Current password is required and must be at least 6 characters
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="newPassword" class="form-label">New Password</label>
+        <div class="input-group">
+          <i class="fas fa-key input-icon"></i>
+          <input 
+            [type]="showNewPassword ? 'text' : 'password'"
+            id="newPassword" 
+            formControlName="newPassword"
+            class="form-input pr-10"
+            placeholder="Enter new password"
+            [ngClass]="{'input-error': passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched}">
+          <button 
+            type="button" 
+            (click)="togglePasswordVisibility('new')" 
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+            [attr.aria-label]="showNewPassword ? 'Hide password' : 'Show password'">
+            <i [class]="showNewPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+          </button>
+        </div>
+        <div *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched" class="error-message">
+          <i class="fas fa-exclamation-circle mr-1"></i>
+          New password must be at least 6 characters
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword" class="form-label">Confirm New Password</label>
+        <div class="input-group">
+          <i class="fas fa-key input-icon"></i>
+          <input 
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            id="confirmPassword" 
+            formControlName="confirmPassword"
+            class="form-input pr-10"
+            placeholder="Confirm new password"
+            [ngClass]="{'input-error': (passwordForm.get('confirmPassword')?.invalid || passwordForm.hasError('mismatch')) && passwordForm.get('confirmPassword')?.touched}">
+          <button 
+            type="button" 
+            (click)="togglePasswordVisibility('confirm')" 
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+            [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'">
+            <i [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+          </button>
+        </div>
+        <div *ngIf="passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched" class="error-message">
+          <i class="fas fa-exclamation-circle mr-1"></i>
+          Passwords do not match
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2">
+        <button 
+          type="submit" 
+          [disabled]="!passwordForm.valid"
+          class="btn-primary"
+          [ngClass]="{'opacity-50 cursor-not-allowed': !passwordForm.valid}">
+          <i class="fas fa-key mr-2"></i>
+          {{ loading ? 'Updating...' : 'Change Password' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+</div>

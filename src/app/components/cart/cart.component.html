@@ -1,0 +1,60 @@
+<div class="cart-container">
+
+  @if (cart$ | async; as cart) {
+
+    @if (!cart?.items?.length) {
+      <div class="text-2xl font-bold text-gray-800 text-center">
+        Your Shopping Cart is empty
+      </div>
+    } @else {
+      <div class="text-2xl font-bold mb-8 text-gray-800">Your Shopping Cart</div>
+    }
+
+    @if (cart?.items?.length) {
+      <div class="cart-items">
+        @for (item of cart.items; track item._id) {
+          <div class="cart-item">
+            <img
+              [src]="ASSET_BASE_URL + item.image || 'assets/placeholder-product.png'"
+              [alt]="item.name"
+              class="product-image"
+            >
+
+            <div class="item-details">
+              <h3>{{ item.name }}</h3>
+              <p>Price: ${{ item.price | number:'1.2-2' }}</p>
+
+              <div class="quantity-controls">
+                <button (click)="updateQuantity(item._id, item.quantity - 1)">-</button>
+                <span>{{ item.quantity }}</span>
+                <button (click)="updateQuantity(item._id, item.quantity + 1)">+</button>
+              </div>
+
+              <button class="remove-btn" (click)="removeItem(item._id)">Remove</button>
+            </div>
+
+            <div class="item-total">
+              ${{ (item.price * item.quantity) | number:'1.2-2' }}
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    @if (cart?.items?.length) {
+      <div class="cart-summary">
+        <div class="total">
+          <span>Total:</span>
+          <span>${{ cart.total | number:'1.2-2' }}</span>
+        </div>
+        <button class="checkout-btn" (click)="checkout()">Proceed to Checkout</button>
+        <button class="clear-btn" (click)="clearCart()">Clear Cart</button>
+      </div>
+    }
+
+  } @else {
+    <div class="text-2xl font-bold text-gray-800 text-center">
+      Your Shopping Cart is empty
+    </div>
+  }
+</div>

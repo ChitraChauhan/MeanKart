@@ -1,0 +1,9 @@
+<div class="notification-container">
+  @for (notification of notifications; track notification.id) {
+    <div class="notification"
+         [ngClass]="'notification-' + notification.type">
+      {{ notification.message }}
+      <button (click)="remove(notification.id)">&times;</button>
+    </div>
+  }
+  </div>

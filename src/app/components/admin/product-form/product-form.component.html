@@ -1,0 +1,209 @@
+<div class="product-form-container">
+  <div class="form-header">
+    <h2>{{ isEditMode ? 'Edit ProductModel' : 'Add New ProductModel' }}</h2>
+    <button routerLink="/admin/products" class="btn btn-secondary">
+      <i class="fas fa-arrow-left"></i> Back to Products
+    </button>
+  </div>
+
+  @if (!loading) {
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <div class="form-section">
+          <h3>Basic Information</h3>
+
+          <!-- Name -->
+          <div class="form-group">
+            <label for="name">ProductModel Name *</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              [class.is-invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+
+            @if (productForm.get('name')?.errors?.['required'] && productForm.get('name')?.touched) {
+              <div class="error-message">ProductModel name is required</div>
+            }
+            @if (productForm.get('name')?.errors?.['minlength']) {
+              <div class="error-message">Name must be at least 3 characters long</div>
+            }
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <label for="description">Description *</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              rows="4"
+              [class.is-invalid]="productForm.get('description')?.invalid && productForm.get('description')?.touched"></textarea>
+
+            @if (productForm.get('description')?.errors?.['required'] && productForm.get('description')?.touched) {
+              <div class="error-message">Description is required</div>
+            }
+            @if (productForm.get('description')?.errors?.['minlength']) {
+              <div class="error-message">Description must be at least 10 characters long</div>
+            }
+          </div>
+
+          <!-- Price and Stock -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="price">Price *</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input
+                  type="number"
+                  id="price"
+                  formControlName="price"
+                  step="0.01"
+                  min="0.01"
+                  [class.is-invalid]="productForm.get('price')?.invalid && productForm.get('price')?.touched">
+              </div>
+
+              @if (productForm.get('price')?.errors?.['required'] && productForm.get('price')?.touched) {
+                <div class="error-message">Price is required</div>
+              }
+              @if (productForm.get('price')?.errors?.['min']) {
+                <div class="error-message">Price must be greater than 0</div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="stock">Stock *</label>
+              <input
+                type="number"
+                id="stock"
+                formControlName="stock"
+                min="0"
+                [class.is-invalid]="productForm.get('stock')?.invalid && productForm.get('stock')?.touched">
+
+              @if (productForm.get('stock')?.errors?.['required'] && productForm.get('stock')?.touched) {
+                <div class="error-message">Stock is required</div>
+              }
+              @if (productForm.get('stock')?.errors?.['min']) {
+                <div class="error-message">Stock cannot be negative</div>
+              }
+            </div>
+          </div>
+
+          <!-- Category -->
+          <div class="form-group">
+            <label for="category">Category *</label>
+            <select
+              id="category"
+              formControlName="category"
+              [class.is-invalid]="productForm.get('category')?.invalid && productForm.get('category')?.touched">
+              <option value="">Select a category</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Clothing">Clothing</option>
+              <option value="Books">Books</option>
+              <option value="Home">Home & Garden</option>
+              <option value="Sports">Sports & Outdoors</option>
+              <option value="Other">Other</option>
+            </select>
+
+            @if (productForm.get('category')?.errors?.['required'] && productForm.get('category')?.touched) {
+              <div class="error-message">Please select a category</div>
+            }
+          </div>
+        </div>
+
+        <!-- Images -->
+        <div class="form-section">
+          <h3>Images</h3>
+          <div formArrayName="imageUrl">
+            @for (image of images.controls; let i = $index; track i) {
+              <div class="image-upload-group">
+                <div class="form-group">
+                  <label [for]="'image' + i">Image URL {{ i + 1 }} *</label>
+                  <div class="image-url-input">
+                    <input
+                      type="text"
+                      [id]="'image' + i"
+                      [formControlName]="i"
+                      placeholder="https://example.com/image.jpg"
+                      [class.is-invalid]="images.controls[i].invalid && images.controls[i].touched">
+
+                    @if (images.length > 1) {
+                      <button type="button" class="btn btn-remove" (click)="removeImage(i)">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    }
+                  </div>
+
+                  @if (images.controls[i].errors?.['required'] && images.controls[i].touched) {
+                    <div class="error-message">Image URL is required</div>
+                  }
+
+                  @if (images.controls[i].value) {
+                    <div class="image-preview">
+                      <img [src]="ASSET_BASE_URL + images.controls[i].value" alt="Preview">
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+            <button type="button" class="btn btn-secondary" (click)="addImage()">
+              <i class="fas fa-plus"></i> Add Another Image
+            </button>
+          </div>
+        </div>
+
+        <!-- Specifications -->
+        <div class="form-section full-width">
+          <h3>Specifications</h3>
+          <div formGroupName="specifications" class="specs-grid">
+            <div class="form-group">
+              <label for="brand">Brand</label>
+              <input type="text" id="brand" formControlName="brand">
+            </div>
+            <div class="form-group">
+              <label for="model">Model</label>
+              <input type="text" id="model" formControlName="model">
+            </div>
+            <div class="form-group">
+              <label for="color">Color</label>
+              <input type="text" id="color" formControlName="color">
+            </div>
+            <div class="form-group">
+              <label for="size">Size</label>
+              <input type="text" id="size" formControlName="size" placeholder="e.g., S, M, L, XL">
+            </div>
+            <div class="form-group">
+              <label for="weight">Weight</label>
+              <div class="input-group">
+                <input type="number" id="weight" formControlName="weight" step="0.01" min="0">
+                <span class="input-group-text">kg</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="loading">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid || loading">
+          @if (loading) {
+            <span class="spinner-border spinner-border-sm"></span>
+          }
+          {{ isEditMode ? 'Update ProductModel' : 'Add ProductModel' }}
+        </button>
+      </div>
+    </form>
+  } @else {
+    <div class="loading-overlay">
+      <div class="spinner"></div>
+      <p>{{ isEditMode ? 'Loading product details...' : 'Creating product...' }}</p>
+    </div>
+  }
+
+  @if (error) {
+    <div class="alert alert-danger">
+      {{ error }}
+    </div>
+  }
+</div>

@@ -1,0 +1,141 @@
+<div class="container mx-auto px-4 py-8 relative">
+  <h1 class="text-3xl font-bold mb-8 text-gray-800">Top Products for you</h1>
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (keyup)="onSearch()"
+      placeholder="Search products...">
+  </div>
+
+  <!-- Loading State -->
+  @if (loading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Loading products...</p>
+    </div>
+  }
+
+  <!-- Error Message -->
+  @if (error) {
+    <div class="alert alert-danger">
+      {{ error }}
+    </div>
+  }
+
+  <!-- Products Grid -->
+  @if (!loading && !error) {
+    <div class="">
+      @if (products.length === 0) {
+        <div class="text-center py-12">
+          <p class="text-gray-600">
+            No products available at the moment. Please check back later.
+          </p>
+        </div>
+      }
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        @for (product of products; track product._id) {
+          <div
+            class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 product-card"
+          >
+            <!-- ProductModel Image -->
+            <div class="h-48 bg-gray-100 overflow-hidden">
+              <img
+                [src]="ASSET_BASE_URL + product.imageUrl[0] || 'https://via.placeholder.com/300x200?text=No+Image'"
+                [alt]="product.name"
+                class="w-full h-full object-cover scale-90 hover:scale-105 transition-transform duration-300"
+                (click)="viewProduct(product._id)"
+              />
+            </div>
+
+            <!-- ProductModel Info -->
+            <div class="p-5">
+              <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                {{ product.name }}
+              </h3>
+              <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+                {{ product.description || 'No description available' }}
+              </p>
+
+              <div class="flex justify-between items-center">
+                <span class="text-xl font-bold text-indigo-600">
+                  ${{ product.price | number: '1.2-2' }}
+                </span>
+                <div class="relative">
+                  @if (product.stock === 0 || (product.stock !== undefined && product.stock <= 0)) {
+                    <span class="text-sm text-red-600 font-medium">Out of Stock</span>
+                  } @else {
+                    <button
+                      (click)="$event.stopPropagation(); addToCart(product)"
+                      class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg transition-colors duration-200 flex items-center shadow-md hover:shadow-lg"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 mr-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m-10 0h10m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                        />
+                      </svg>
+                      Add to Cart
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+
+    </div>
+    <!-- Pagination -->
+    @if (totalPages > 1) {
+      <div class="pagination">
+        <button
+          [disabled]="currentPage === 1"
+          (click)="onPageChange(1)"
+          class="btn-pagination">
+          &laquo;
+        </button>
+        <button
+          [disabled]="currentPage === 1"
+          (click)="onPageChange(currentPage - 1)"
+          class="btn-pagination">
+          &lsaquo;
+        </button>
+
+        @for (page of getPageNumbers(); track page) {
+          <button
+            [class.active]="page === currentPage"
+            (click)="onPageChange(page)"
+            class="btn-pagination">
+            {{ page }}
+          </button>
+        }
+
+        <button
+          [disabled]="currentPage === totalPages"
+          (click)="onPageChange(currentPage + 1)"
+          class="btn-pagination">
+          &rsaquo;
+        </button>
+        <button
+          [disabled]="currentPage === totalPages"
+          (click)="onPageChange(totalPages)"
+          class="btn-pagination">
+          &raquo;
+        </button>
+      </div>
+    }
+  }
+</div>

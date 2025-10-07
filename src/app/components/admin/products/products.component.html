@@ -1,0 +1,108 @@
+<!-- products.component.html -->
+<div class="admin-products">
+  <div class="header">
+    <h2>Product Management</h2>
+    <button routerLink="/admin/products/new" class="btn btn-primary">
+      <i class="fas fa-plus"></i> Add New Product
+    </button>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (keyup)="onSearch()"
+      placeholder="Search products..."
+      class="search-input">
+  </div>
+
+  <!-- Loading State -->
+  @if (loading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Loading products...</p>
+    </div>
+  }
+
+  <!-- Error Message -->
+  @if (error) {
+    <div class="alert alert-danger">
+      {{ error }}
+    </div>
+  }
+
+  <!-- Products Grid -->
+  @if (!loading && !error) {
+    <div class="products-grid">
+      @if (products.length === 0) {
+        <div class="no-products">
+          <p>No products found. Add your first product to get started.</p>
+        </div>
+      }
+
+      @for (product of products; track product._id) {
+        <div class="product-card">
+          <div class="product-image">
+            <img [src]="ASSET_BASE_URL + product.imageUrl[0] || 'assets/placeholder.png'" [alt]="product.name">
+          </div>
+          <div class="product-details">
+            <h3>{{ product.name }}</h3>
+            <p class="price">{{ product.price | currency:'USD':'symbol':'1.2-2' }}</p>
+            <p class="stock" [class.in-stock]="product.stock > 0" [class.out-of-stock]="product.stock <= 0">
+              {{ product.stock > 0 ? 'In Stock' : 'Out of Stock' }}
+            </p>
+          </div>
+          <div class="product-actions">
+            <button [routerLink]="['/admin/products/edit', product._id]" class="btn btn-edit">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+            <button (click)="deleteProduct(product._id)" class="btn btn-delete">
+              <i class="fas fa-trash"></i> Delete
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Pagination -->
+    @if (totalPages > 1) {
+      <div class="pagination">
+        <button
+          [disabled]="currentPage === 1"
+          (click)="onPageChange(1)"
+          class="btn-pagination">
+          &laquo;
+        </button>
+        <button
+          [disabled]="currentPage === 1"
+          (click)="onPageChange(currentPage - 1)"
+          class="btn-pagination">
+          &lsaquo;
+        </button>
+
+        @for (page of getPageNumbers(); track page) {
+          <button
+            [class.active]="page === currentPage"
+            (click)="onPageChange(page)"
+            class="btn-pagination">
+            {{ page }}
+          </button>
+        }
+
+        <button
+          [disabled]="currentPage === totalPages"
+          (click)="onPageChange(currentPage + 1)"
+          class="btn-pagination">
+          &rsaquo;
+        </button>
+        <button
+          [disabled]="currentPage === totalPages"
+          (click)="onPageChange(totalPages)"
+          class="btn-pagination">
+          &raquo;
+        </button>
+      </div>
+    }
+  }
+</div>

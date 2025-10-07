@@ -1,0 +1,194 @@
+ .header {
+   background-color: #333;
+   color: #fff;
+   padding: 1rem 0;
+
+   .container {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     max-width: 1200px;
+     margin: 0 auto;
+     padding: 0 1rem;
+   }
+
+   .logo a {
+     color: #fff;
+     text-decoration: none;
+     font-size: 1.5rem;
+     font-weight: bold;
+   }
+
+   .navigation ul {
+     list-style: none;
+     margin: 0;
+     padding: 0;
+     display: flex;
+
+     li {
+       margin-left: 1.5rem;
+
+       a {
+         color: #fff;
+         text-decoration: none;
+         font-size: 1rem;
+
+         &:hover {
+           text-decoration: underline;
+         }
+       }
+     }
+   }
+
+   .admin-dropdown {
+     position: relative;
+     display: inline-block;
+
+     .admin-btn {
+       background: #3498db;
+       color: white;
+       border: none;
+       padding: 0.5rem 1rem;
+       border-radius: 4px;
+       cursor: pointer;
+       transition: background-color 0.3s;
+
+       &:hover {
+         background: #2980b9;
+       }
+     }
+
+     .admin-dropdown-content {
+       display: none;
+       position: absolute;
+       background-color: #f9f9f9;
+       min-width: 160px;
+       box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+       z-index: 1;
+       right: 0;
+       border-radius: 4px;
+       overflow: hidden;
+
+       a {
+         color: black;
+         padding: 12px 16px;
+         text-decoration: none;
+         display: block;
+         text-align: left;
+         white-space: nowrap;
+
+         &:hover {
+           background-color: #f1f1f1;
+           color: #2c3e50;
+         }
+       }
+     }
+
+     &:hover .admin-dropdown-content {
+       display: block;
+     }
+   }
+ }
+// client/src/app/components/header/header.component.scss
+/*
+header {
+  background-color: #2c3e50;
+  color: white;
+  padding: 1rem;
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .logo a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+
+    a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .logout-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background: #c0392b;
+      }
+    }
+
+    .admin-dropdown {
+      position: relative;
+      display: inline-block;
+
+      .admin-btn {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background: #2980b9;
+        }
+      }
+
+      .admin-dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        right: 0;
+        border-radius: 4px;
+        overflow: hidden;
+
+        a {
+          color: black;
+          padding: 12px 16px;
+          text-decoration: none;
+          display: block;
+          text-align: left;
+          white-space: nowrap;
+
+          &:hover {
+            background-color: #f1f1f1;
+            color: #2c3e50;
+          }
+        }
+      }
+
+      &:hover .admin-dropdown-content {
+        display: block;
+      }
+    }
+  }
+}*/
