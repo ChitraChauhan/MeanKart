@@ -7,7 +7,7 @@
   } @else {
     <div class="order-summary">
       <h2>Order Summary</h2>
-      <p>Total Amount: ${{ totalAmount | number:'1.2-2' }}</p>
+      <p>Total Amount: ₹{{ totalAmount | number:'1.2-2' }}</p>
       <button
         (click)="payNow()"
         [disabled]="totalAmount <= 0"

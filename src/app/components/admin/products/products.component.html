@@ -43,7 +43,7 @@
           </div>
           <div class="product-details">
             <h3>{{ product.name }}</h3>
-            <p class="price">{{ product.price | currency:'USD':'symbol':'1.2-2' }}</p>
+            <p class="price">{{ product.price | currency:'INR':'symbol':'1.2-2' }}</p>
             <p class="stock" [class.in-stock]="product.stock > 0" [class.out-of-stock]="product.stock <= 0">
               {{ product.stock > 0 ? 'In Stock' : 'Out of Stock' }}
             </p>

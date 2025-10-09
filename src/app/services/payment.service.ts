@@ -49,7 +49,7 @@ export class PaymentService {
   ): Observable<CreateOrderResponse> {
     return this.http.post<CreateOrderResponse>(`${this.apiUrl}/order`, {
       amount: Math.round(amount * 100),
-      currency: 'USD',
+      currency: 'INR',
       items: items.map((item) => ({
         productId: item.productId || item._id,
         name: item.name,

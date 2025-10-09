@@ -23,7 +23,7 @@
 
       <div class="product-info">
         <h1>{{ product.name }}</h1>
-        <div class="price">${{ product.price | number:'1.2-2' }}</div>
+        <div class="price">₹{{ product.price | number:'1.2-2' }}</div>
 
         <div class="stock-status" [class.in-stock]="isInStock()" [class.out-of-stock]="!isInStock()">
           <i class="fas {{ isInStock() ? 'fa-check-circle' : 'fa-times-circle' }}"></i>

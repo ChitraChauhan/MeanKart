@@ -93,7 +93,7 @@ export class CheckoutComponent implements OnInit {
             const options = {
               key: environment.RAZORPAY_KEY_ID,
               amount: razorpayOrder.amount,
-              currency: razorpayOrder.currency || 'USD',
+              currency: razorpayOrder.currency || 'INR',
               name: 'E-commerce Store',
               description: 'Order Payment',
               order_id: razorpayOrder.id,

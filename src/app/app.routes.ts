@@ -14,6 +14,8 @@ import { NoAdminGuard } from './guards/no-admin-guard';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { OrderHistoryComponent } from './components/order/order-history/order-history.component';
 import { OrderDetailComponent } from './components/order/order-detail/order-detail.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { ProfileComponent } from './components/user/profile/profile.component';
 
 export const routes: Routes = [
   {
@@ -38,10 +40,7 @@ export const routes: Routes = [
   },
   {
     path: 'profile',
-    loadComponent: () =>
-      import('./components/user/profile/profile.component').then(
-        (m) => m.ProfileComponent,
-      ),
+    component: ProfileComponent,
     canActivate: [AuthGuard],
   },
   {
@@ -101,5 +100,10 @@ export const routes: Routes = [
     component: RegisterComponent,
     canActivate: [NoAuthGuard],
   },
-  { path: '**', redirectTo: '' },
+  {
+    path: '404',
+    component: PageNotFoundComponent,
+    title: 'Page Not Found',
+  },
+  { path: '**', redirectTo: '404' },
 ];

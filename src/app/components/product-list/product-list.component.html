@@ -56,7 +56,7 @@
 
               <div class="flex justify-between items-center">
                 <span class="text-xl font-bold text-indigo-600">
-                  ${{ product.price | number: '1.2-2' }}
+                  ₹{{ product.price | number: '1.2-2' }}
                 </span>
                 <div class="relative">
                   @if (product.stock === 0 || (product.stock !== undefined && product.stock <= 0)) {

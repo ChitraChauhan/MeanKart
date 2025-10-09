@@ -22,7 +22,7 @@
 
             <div class="item-details">
               <h3>{{ item.name }}</h3>
-              <p>Price: ${{ item.price | number:'1.2-2' }}</p>
+              <p>Price: ₹{{ item.price | number:'1.2-2' }}</p>
 
               <div class="quantity-controls">
                 <button (click)="updateQuantity(item._id, item.quantity - 1)">-</button>
@@ -36,7 +36,7 @@
             </div>
 
             <div class="item-total">
-              ${{ (item.price * item.quantity) | number:'1.2-2' }}
+              ₹{{ (item.price * item.quantity) | number:'1.2-2' }}
             </div>
           </div>
         }
@@ -47,7 +47,7 @@
       <div class="cart-summary">
         <div class="total">
           <span>Total:</span>
-          <span>${{ cart.total | number:'1.2-2' }}</span>
+          <span>₹{{ cart.total | number:'1.2-2' }}</span>
         </div>
         <button class="checkout-btn" (click)="checkout()">Proceed to Checkout</button>
         <button class="clear-btn" (click)="clearCart()">Clear Cart</button>
