@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -7,9 +12,8 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule]
+  styleUrl: './login.component.scss',
+  imports: [CommonModule, ReactiveFormsModule],
 })
 export class LoginComponent {
   loginForm: FormGroup;
@@ -19,11 +23,11 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required]],
     });
   }
 
@@ -39,8 +43,10 @@ export class LoginComponent {
         },
         error: (err) => {
           this.isLoading = false;
-          this.errorMessage = err.error.message || 'An unexpected error occurred. Please try again.';
-        }
+          this.errorMessage =
+            err.error.message ||
+            'An unexpected error occurred. Please try again.';
+        },
       });
     }
   }

@@ -105,26 +105,26 @@
 
   @media (max-width: 768px) {
     padding: 1rem;
-    
+
     .tabs {
       flex-direction: column;
-      
+
       button {
         margin: 0.25rem 0;
         border-radius: 4px;
         text-align: left;
-        
+
         &.active {
           border-left: 3px solid #2196f3;
           border-bottom: none;
         }
       }
     }
-    
+
     .users-table {
       display: block;
       overflow-x: auto;
-      
+
       th, td {
         padding: 0.75rem;
       }
@@ -132,14 +132,14 @@
   }
 
   .active {
-    color: #10B981; // Green for active
+    color: #10B981;
     font-weight: 500;
   }
-  
+
   .inactive {
-    color: #6B7280; // Gray for inactive
+    color: #6B7280;
   }
-  
+
   .last-active {
     font-size: 0.8em;
     color: #9CA3AF;

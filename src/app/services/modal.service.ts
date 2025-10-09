@@ -12,7 +12,7 @@ export interface ConfirmOptions extends AlertOptions {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ModalService {
   constructor() {}
@@ -26,7 +26,7 @@ export class ModalService {
     return modal.showAlert({
       title: options.title,
       message: options.message,
-      confirmText: options.confirmText
+      confirmText: options.confirmText,
     });
   }
 
@@ -40,7 +40,7 @@ export class ModalService {
       title: options.title,
       message: options.message,
       confirmText: options.confirmText,
-      cancelText: options.cancelText
+      cancelText: options.cancelText,
     });
   }
 }

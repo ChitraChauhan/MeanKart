@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environment';
 
 export interface PaymentVerificationData {
   razorpay_order_id: string;
@@ -38,30 +39,38 @@ export interface CreateOrderResponse {
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
-  private apiUrl = 'http://localhost:5000/api/payment';
+  private apiUrl = environment.apiUrl + '/api/payment';
 
   constructor(private http: HttpClient) {}
 
-  createOrder(amount: number, items: any[] = []): Observable<CreateOrderResponse> {
+  createOrder(
+    amount: number,
+    items: any[] = [],
+  ): Observable<CreateOrderResponse> {
     return this.http.post<CreateOrderResponse>(`${this.apiUrl}/order`, {
-      amount: Math.round(amount * 100), // Convert to paisa
+      amount: Math.round(amount * 100),
       currency: 'USD',
-      items: items.map(item => ({
+      items: items.map((item) => ({
         productId: item.productId || item._id,
         name: item.name,
         price: item.price,
         quantity: item.quantity,
-        image: item.image || ''
-      }))
+        image: item.image || '',
+      })),
     });
   }
 
-  verifyPayment(data: PaymentVerificationData): Observable<PaymentVerificationResponse> {
-    return this.http.post<PaymentVerificationResponse>(`${this.apiUrl}/verify`, {
-      razorpay_order_id: data.razorpay_order_id,
-      razorpay_payment_id: data.razorpay_payment_id,
-      razorpay_signature: data.razorpay_signature
-    });
+  verifyPayment(
+    data: PaymentVerificationData,
+  ): Observable<PaymentVerificationResponse> {
+    return this.http.post<PaymentVerificationResponse>(
+      `${this.apiUrl}/verify`,
+      {
+        razorpay_order_id: data.razorpay_order_id,
+        razorpay_payment_id: data.razorpay_payment_id,
+        razorpay_signature: data.razorpay_signature,
+      },
+    );
   }
 
   getOrder(orderId: string): Observable<any> {

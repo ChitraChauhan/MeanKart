@@ -1,27 +1,21 @@
-// product-list.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
-import {DecimalPipe} from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { environment } from '../../../../environment';
 import { Router, RouterModule } from '@angular/router';
-import {AuthService} from '../../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {Product} from '../../models/admin-product.model';
-import {Subject, Subscription} from 'rxjs';
-import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Product } from '../../models/product.model';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-list',
-  templateUrl: `./product-list.html`,
-  imports: [
-    DecimalPipe,
-    RouterModule,
-    ReactiveFormsModule,
-    FormsModule
-  ],
-  styleUrl: `./product-list.scss`
+  templateUrl: `./product-list.component.html`,
+  imports: [DecimalPipe, RouterModule, ReactiveFormsModule, FormsModule],
+  styleUrl: `./product-list.component.scss`,
 })
 export class ProductListComponent implements OnInit {
   products: any[] = [];
@@ -41,15 +35,13 @@ export class ProductListComponent implements OnInit {
     private cartService: CartService,
     private router: Router,
     private authService: AuthService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
   ) {
-    // Set up the debounced search
-    this.searchSubscription = this.searchSubject.pipe(
-      debounceTime(1000), // Wait 500ms after the last event before emitting last value
-      distinctUntilChanged() // Only emit if the current value is different than the last
-    ).subscribe(term => {
-      this.performSearch(term);
-    });
+    this.searchSubscription = this.searchSubject
+      .pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe((term) => {
+        this.performSearch(term);
+      });
   }
 
   ngOnInit(): void {
@@ -62,7 +54,12 @@ export class ProductListComponent implements OnInit {
     this.currentPage = page;
 
     this.productService.getProducts(page, this.searchTerm).subscribe({
-      next: (response: { products: Product[]; page: number; pages: number; total: number; }) => {
+      next: (response: {
+        products: Product[];
+        page: number;
+        pages: number;
+        total: number;
+      }) => {
         this.products = response.products;
         this.currentPage = response.page;
         this.totalPages = response.pages;
@@ -73,7 +70,7 @@ export class ProductListComponent implements OnInit {
         console.error('Error loading products:', err);
         this.error = 'Failed to load products. Please try again.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -83,18 +80,20 @@ export class ProductListComponent implements OnInit {
 
   private performSearch(term: string): void {
     this.searchTerm = term;
-    this.loadProducts(1); // Reset to first page on new search
+    this.loadProducts(1);
   }
 
   onPageChange(page: number): void {
     this.loadProducts(page);
   }
 
-  // Add this to your component class
   getPageNumbers(): number[] {
     const pages: number[] = [];
-    const maxVisiblePages = 5; // Show up to 5 page numbers
-    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+    const maxVisiblePages = 5;
+    let startPage = Math.max(
+      1,
+      this.currentPage - Math.floor(maxVisiblePages / 2),
+    );
     let endPage = startPage + maxVisiblePages - 1;
 
     if (endPage > this.totalPages) {
@@ -110,13 +109,13 @@ export class ProductListComponent implements OnInit {
   }
 
   addToCart(product: any): void {
-    this.authService.isAuthenticated$.subscribe(({auth}) => {
+    this.authService.isAuthenticated$.subscribe(({ auth }) => {
       if (auth) {
         this.cartService.addToCart(product._id, 1).subscribe(() => {
           this.notificationService.show({
             type: 'success',
             message: `${product.name} added to cart`,
-            duration: 3000
+            duration: 3000,
           });
         });
         this.router.navigate(['/cart']);
@@ -125,7 +124,7 @@ export class ProductListComponent implements OnInit {
         this.notificationService.show({
           type: 'success',
           message: 'Please Login/Register in order to add to cart',
-          duration: 3000
+          duration: 3000,
         });
       }
     });

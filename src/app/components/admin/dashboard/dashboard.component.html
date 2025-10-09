@@ -36,7 +36,7 @@
             <td>
               <span [class.active]="isUserActive(user)" [class.inactive]="!isUserActive(user)">
                 {{ isUserActive(user) ? 'Active' : 'Inactive' }}
-                @if(!isUserActive(user) && user.lastActive) {
+                @if (!isUserActive(user) && user.lastActive) {
                   <span class="last-active">
                   (Last active: {{ getLastActiveTime(user.lastActive) }})
                 </span>

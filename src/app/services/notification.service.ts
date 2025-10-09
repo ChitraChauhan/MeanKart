@@ -1,4 +1,3 @@
-// client/src/app/services/notification.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -10,7 +9,7 @@ export interface Notification {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NotificationService {
   private notificationsSubject = new BehaviorSubject<Notification[]>([]);
@@ -32,7 +31,9 @@ export class NotificationService {
 
   remove(id: number) {
     const currentNotifications = this.notificationsSubject.value;
-    this.notificationsSubject.next(currentNotifications.filter(n => n.id !== id));
+    this.notificationsSubject.next(
+      currentNotifications.filter((n) => n.id !== id),
+    );
   }
 
   clear() {

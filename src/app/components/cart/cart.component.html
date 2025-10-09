@@ -32,7 +32,8 @@
 
               <button (click)="removeItem(item._id)" class="btn-icon delete">
                 <i class="fas fa-trash"></i>
-              </button>            </div>
+              </button>
+            </div>
 
             <div class="item-total">
               ${{ (item.price * item.quantity) | number:'1.2-2' }}

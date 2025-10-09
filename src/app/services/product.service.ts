@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ProductModel } from '../models/product.model';
+import { Product } from '../models/product.model';
+import { environment } from '../../../environment';
 
 export interface PaginatedResponse<T> {
   products: T[];
@@ -11,26 +12,29 @@ export interface PaginatedResponse<T> {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProductService {
-  private apiUrl = 'http://localhost:5000/api/products';
+  private apiUrl = environment.apiUrl + '/api/products';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getProducts(page: number = 1, keyword: string = ''): Observable<PaginatedResponse<ProductModel>> {
+  getProducts(
+    page: number = 1,
+    keyword: string = '',
+  ): Observable<PaginatedResponse<Product>> {
     let params = new HttpParams()
       .set('page', page.toString())
-      .set('pageSize', '8'); // 12 items per page
+      .set('pageSize', '8');
 
     if (keyword) {
       params = params.set('keyword', keyword);
     }
 
-    return this.http.get<PaginatedResponse<ProductModel>>(this.apiUrl, { params });
+    return this.http.get<PaginatedResponse<Product>>(this.apiUrl, { params });
   }
 
-  getProductById(id: string): Observable<ProductModel> {
-    return this.http.get<ProductModel>(`${this.apiUrl}/${id}`);
+  getProductById(id: string): Observable<Product> {
+    return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
 }

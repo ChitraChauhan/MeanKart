@@ -1,19 +1,22 @@
-import {Component, OnInit, inject} from '@angular/core';
-import {FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule} from '@angular/forms';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {AdminProductService} from '../../../services/admin-product.service';
-import {ModalService} from '../../../services/modal.service';
-import {Product} from '../../../models/admin-product.model';
-import {environment} from '../../../../../environment';
+import { Component, OnInit, inject } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormArray,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { AdminProductService } from '../../../services/admin-product.service';
+import { ModalService } from '../../../services/modal.service';
+import { Product } from '../../../models/product.model';
+import { environment } from '../../../../../environment';
 
 @Component({
   selector: 'app-product-form',
   templateUrl: './product-form.component.html',
-  imports: [
-    ReactiveFormsModule,
-    RouterLink,
-  ],
-  styleUrls: ['./product-form.component.scss']
+  imports: [ReactiveFormsModule, RouterLink],
+  styleUrl: './product-form.component.scss',
 })
 export class ProductFormComponent implements OnInit {
   productForm: FormGroup;
@@ -29,7 +32,7 @@ export class ProductFormComponent implements OnInit {
     private fb: FormBuilder,
     private productService: AdminProductService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {
     this.productForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -43,13 +46,13 @@ export class ProductFormComponent implements OnInit {
         model: [''],
         color: [''],
         size: [''],
-        weight: ['']
-      })
+        weight: [''],
+      }),
     });
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       this.productId = params.get('id');
       if (this.productId) {
         this.isEditMode = true;
@@ -78,24 +81,21 @@ export class ProductFormComponent implements OnInit {
     this.loading = true;
     this.productService.getProductById(id).subscribe({
       next: (product: any) => {
-        // Clear existing images
         while (this.images.length) {
           this.images.removeAt(0);
         }
 
-        // Add images from product
         product.imageUrl.forEach((image: any) => {
           this.images.push(this.fb.control(image, Validators.required));
         });
 
-        // Update form with product data
         this.productForm.patchValue({
           name: product.name,
           description: product.description,
           price: product.price,
           stock: product.stock,
           category: product.category,
-          specifications: product.specifications || {}
+          specifications: product.specifications || {},
         });
 
         this.loading = false;
@@ -104,7 +104,7 @@ export class ProductFormComponent implements OnInit {
         console.error('Error loading product:', err);
         this.error = 'Failed to load product details';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -125,9 +125,10 @@ export class ProductFormComponent implements OnInit {
       productData._id = this.productId;
     }
 
-    const productObservable = this.isEditMode && this.productId
-      ? this.productService.updateProduct(this.productId, productData)
-      : this.productService.createProduct(productData);
+    const productObservable =
+      this.isEditMode && this.productId
+        ? this.productService.updateProduct(this.productId, productData)
+        : this.productService.createProduct(productData);
 
     productObservable.subscribe({
       next: () => {
@@ -137,7 +138,7 @@ export class ProductFormComponent implements OnInit {
         console.error('Error saving product:', err);
         this.error = 'Failed to save product. Please try again.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -150,9 +151,10 @@ export class ProductFormComponent implements OnInit {
     }
     const confirmed: boolean = await this.modalService.showConfirm({
       title: 'Discard Changes',
-      message: 'You have unsaved changes. Are you sure you want to leave this page?',
+      message:
+        'You have unsaved changes. Are you sure you want to leave this page?',
       confirmText: 'Discard Changes',
-      cancelText: 'Continue Editing'
+      cancelText: 'Continue Editing',
     });
 
     if (confirmed) {

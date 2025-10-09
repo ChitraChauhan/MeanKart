@@ -1,21 +1,16 @@
-// cart.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CartService } from '../../services/cart.service';
 import { ModalService } from '../../services/modal.service';
-import {AsyncPipe, DecimalPipe} from '@angular/common';
-import {environment} from '../../../../environment';
-import {Router, RouterLink} from '@angular/router';
+import { AsyncPipe, DecimalPipe } from '@angular/common';
+import { environment } from '../../../../environment';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
   templateUrl: `./cart.component.html`,
-  imports: [
-    DecimalPipe,
-    AsyncPipe,
-    RouterLink
-  ],
-  styleUrls: [`./cart.component.scss`]
+  imports: [DecimalPipe, AsyncPipe, RouterLink],
+  styleUrl: `./cart.component.scss`,
 })
 export class CartComponent implements OnInit {
   cart$: Observable<any>;
@@ -24,7 +19,7 @@ export class CartComponent implements OnInit {
   constructor(
     private cartService: CartService,
     private modalService: ModalService,
-    private router: Router  // Add this
+    private router: Router,
   ) {
     this.cart$ = this.cartService.getCart();
   }
@@ -45,7 +40,7 @@ export class CartComponent implements OnInit {
       title: 'Clear Cart',
       message: 'Are you sure you want to clear your cart?',
       confirmText: 'Yes, clear cart',
-      cancelText: 'No, keep items'
+      cancelText: 'No, keep items',
     });
 
     if (confirmed) {
@@ -58,14 +53,11 @@ export class CartComponent implements OnInit {
       title: 'Proceed to Checkout',
       message: 'Are you ready to complete your purchase?',
       confirmText: 'Yes, checkout',
-      cancelText: 'Continue shopping'
+      cancelText: 'Continue shopping',
     });
 
     if (confirmed) {
       this.router.navigate(['/checkout']);
-
-      // Add your checkout navigation or API call here
-      // this.router.navigate(['/checkout']);
     }
   }
 }

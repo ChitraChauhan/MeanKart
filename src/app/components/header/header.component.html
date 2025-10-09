@@ -1,4 +1,3 @@
-<!-- src/app/components/header/header.component.html -->
 <header class="bg-gray-800 text-white shadow-lg">
   <div class="container mx-auto px-4 py-3 flex justify-between items-center">
     <div class="logo">
@@ -23,16 +22,16 @@
             <a routerLink="/products" class="hover:text-gray-300 transition-colors">Products</a>
           </li>
           @if (isAuthenticated) {
-          <li class="relative">
-            <a routerLink="/cart" class="hover:text-gray-300 transition-colors flex items-center">
-              <span>Cart</span>
-              @if (cartItemCount > 0) {
-                <span class="ml-1 bg-indigo-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+            <li class="relative">
+              <a routerLink="/cart" class="hover:text-gray-300 transition-colors flex items-center">
+                <span>Cart</span>
+                @if (cartItemCount > 0) {
+                  <span class="ml-1 bg-indigo-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                   {{ cartItemCount }}
                 </span>
-              }
-            </a>
-          </li>
+                }
+              </a>
+            </li>
             <li>
               <a routerLink="/my-orders" class="hover:text-gray-300 transition-colors">Orders</a>
             </li>
@@ -71,34 +70,3 @@
     </nav>
   </div>
 </header>
-<!-- client/src/app/components/header/header.component.html -->
-<!--
-<header>
-  <nav>
-    <div class="logo">
-      <a routerLink="/">E-Commerce</a>
-    </div>
-
-    <div class="nav-links">
-      <a routerLink="/products">Products</a>
-      <a routerLink="/cart">Cart</a>
-
-      @if (authService.isAuthenticated$ | async) {
-        @if (isAdmin) {
-          <div class="admin-dropdown">
-            <button class="admin-btn">Admin</button>
-            <div class="admin-dropdown-content">
-              <a routerLink="/admin/dashboard">Dashboard</a>
-              <a routerLink="/admin/users">Users</a>
-              <a routerLink="/admin/products">Products</a>
-            </div>
-          </div>
-        }
-        <button (click)="logout()" class="logout-btn">Logout</button>
-      } @else {
-        <a routerLink="/login">Login</a>
-        <a routerLink="/register">Register</a>
-      }
-    </div>
-  </nav>
-</header>-->

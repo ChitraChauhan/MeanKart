@@ -1,18 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import {OrderService, Order} from '../../../services/order.service';
-import {AuthService} from '../../../services/auth.service';
-import {Router, RouterLink} from '@angular/router';
-import {CurrencyPipe} from '@angular/common';
-import {environment} from '../../../../../environment';
+import { Component, OnInit } from '@angular/core';
+import { OrderService, Order } from '../../../services/order.service';
+import { AuthService } from '../../../services/auth.service';
+import { Router, RouterLink } from '@angular/router';
+import { CurrencyPipe } from '@angular/common';
+import { environment } from '../../../../../environment';
 
 @Component({
   selector: 'app-order-history',
   templateUrl: './order-history.component.html',
-  imports: [
-    CurrencyPipe,
-    RouterLink
-  ],
-  styleUrl: './order-history.component.scss'
+  imports: [CurrencyPipe, RouterLink],
+  styleUrl: './order-history.component.scss',
 })
 export class OrderHistoryComponent implements OnInit {
   orders: Order[] = [];
@@ -26,17 +23,17 @@ export class OrderHistoryComponent implements OnInit {
   constructor(
     private orderService: OrderService,
     private authService: AuthService,
-    private router: Router
-  ) {
-  }
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
-    this.authService.isAuthenticated$.subscribe(({auth, isAdmin}) => {
+    this.authService.isAuthenticated$.subscribe(({ auth, isAdmin }) => {
       if (!auth) {
-        this.router.navigate(['/login'], {queryParams: {returnUrl: '/my-orders'}});
+        this.router.navigate(['/login'], {
+          queryParams: { returnUrl: '/my-orders' },
+        });
         return;
       }
-      // Only load orders if user is authenticated
       this.loadOrders();
     });
   }
@@ -44,11 +41,11 @@ export class OrderHistoryComponent implements OnInit {
   loadOrders(page: number = 1): void {
     this.isLoading = true;
 
-    // Get the current page from the URL if available
     const urlPage = new URL(window.location.href).searchParams.get('page');
     const currentPage = urlPage ? +urlPage : page;
 
-    this.orderService.getMyOrders({page: currentPage, limit: this.itemsPerPage})
+    this.orderService
+      .getMyOrders({ page: currentPage, limit: this.itemsPerPage })
       .subscribe({
         next: (response) => {
           console.log('Orders loaded:', response);
@@ -58,17 +55,16 @@ export class OrderHistoryComponent implements OnInit {
           this.totalPages = response.pages || 1;
           this.isLoading = false;
 
-          // Update URL to reflect current page
           this.router.navigate([], {
             relativeTo: this.router.routerState.root,
             queryParams: { page: this.currentPage },
-            queryParamsHandling: 'merge'
+            queryParamsHandling: 'merge',
           });
         },
         error: (error) => {
           console.error('Error loading orders:', error);
           this.isLoading = false;
-        }
+        },
       });
   }
 
@@ -100,14 +96,14 @@ export class OrderHistoryComponent implements OnInit {
   getPaginationArray(): (number | string)[] {
     const totalPages = this.totalPages;
     const currentPage = this.currentPage;
-    const delta = 2; // Number of pages to show around the current page
+    const delta = 2;
     const range: (number | string)[] = [];
 
     for (let i = 1; i <= totalPages; i++) {
       if (
-        i === 1 || // First page
-        i === totalPages || // Last page
-        (i >= currentPage - delta && i <= currentPage + delta) // Pages around current
+        i === 1 ||
+        i === totalPages ||
+        (i >= currentPage - delta && i <= currentPage + delta)
       ) {
         range.push(i);
       } else if (range[range.length - 1] !== '...') {

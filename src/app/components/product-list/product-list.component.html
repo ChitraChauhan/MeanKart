@@ -1,7 +1,6 @@
 <div class="container mx-auto px-4 py-8 relative">
   <h1 class="text-3xl font-bold mb-8 text-gray-800">Top Products for you</h1>
 
-  <!-- Search Bar -->
   <div class="search-bar">
     <input
       type="text"
@@ -10,7 +9,6 @@
       placeholder="Search products...">
   </div>
 
-  <!-- Loading State -->
   @if (loading) {
     <div class="loading">
       <div class="spinner"></div>
@@ -18,14 +16,12 @@
     </div>
   }
 
-  <!-- Error Message -->
   @if (error) {
     <div class="alert alert-danger">
       {{ error }}
     </div>
   }
 
-  <!-- Products Grid -->
   @if (!loading && !error) {
     <div class="">
       @if (products.length === 0) {
@@ -41,7 +37,6 @@
           <div
             class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 product-card"
           >
-            <!-- ProductModel Image -->
             <div class="h-48 bg-gray-100 overflow-hidden">
               <img
                 [src]="ASSET_BASE_URL + product.imageUrl[0] || 'https://via.placeholder.com/300x200?text=No+Image'"
@@ -51,7 +46,6 @@
               />
             </div>
 
-            <!-- ProductModel Info -->
             <div class="p-5">
               <h3 class="text-xl font-semibold text-gray-800 mb-2">
                 {{ product.name }}
@@ -98,7 +92,6 @@
 
 
     </div>
-    <!-- Pagination -->
     @if (totalPages > 1) {
       <div class="pagination">
         <button

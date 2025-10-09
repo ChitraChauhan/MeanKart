@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environment';
 
 export interface UserProfile {
   _id?: string;
@@ -13,10 +14,10 @@ export interface UserProfile {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'http://localhost:5000/api/users';
+  private apiUrl = environment.apiUrl + '/api/users';
 
   constructor(private http: HttpClient) {}
 
@@ -32,6 +33,9 @@ export class UserService {
     currentPassword: string;
     newPassword: string;
   }): Observable<{ message: string }> {
-    return this.http.put<{ message: string }>(`${this.apiUrl}/change-password`, passwordData);
+    return this.http.put<{ message: string }>(
+      `${this.apiUrl}/change-password`,
+      passwordData,
+    );
   }
 }

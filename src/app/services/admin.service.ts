@@ -4,14 +4,13 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AdminService {
   private apiUrl = `${environment.apiUrl}/api/admin`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  // User Management
   getUsers(): Observable<any> {
     return this.http.get(`${this.apiUrl}/users`);
   }
@@ -24,7 +23,6 @@ export class AdminService {
     return this.http.delete(`${this.apiUrl}/users/${userId}`);
   }
 
-  // ProductModel Management
   createProduct(productData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/products`, productData);
   }

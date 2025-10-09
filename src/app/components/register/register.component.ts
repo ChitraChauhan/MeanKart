@@ -1,15 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrl: './register.component.scss',
 })
 export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
@@ -19,22 +23,29 @@ export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
-    this.registerForm = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
-    }, { validator: this.passwordMatchValidator });
+    this.registerForm = this.fb.group(
+      {
+        name: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', Validators.required],
+      },
+      { validator: this.passwordMatchValidator },
+    );
   }
 
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password');
     const confirmPassword = form.get('confirmPassword');
-    return password && confirmPassword && password.value === confirmPassword.value ? null : { mismatch: true };
+    return password &&
+      confirmPassword &&
+      password.value === confirmPassword.value
+      ? null
+      : { mismatch: true };
   }
 
   onSubmit(): void {
@@ -49,8 +60,10 @@ export class RegisterComponent implements OnInit {
         },
         error: (err) => {
           this.isLoading = false;
-          this.errorMessage = err.error.message || 'An unexpected error occurred. Please try again.';
-        }
+          this.errorMessage =
+            err.error.message ||
+            'An unexpected error occurred. Please try again.';
+        },
       });
     }
   }
