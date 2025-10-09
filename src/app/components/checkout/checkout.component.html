@@ -1,0 +1,21 @@
+<!-- checkout.component.html -->
+<div class="checkout-container">
+  @if (isLoading) {
+    <div class="loading">
+      <p>Loading your order...</p>
+    </div>
+
+  } @else {
+    <div class="order-summary">
+      <h2>Order Summary</h2>
+      <p>Total Amount: ${{ totalAmount | number:'1.2-2' }}</p>
+      <button
+        (click)="payNow()"
+        [disabled]="totalAmount <= 0"
+        class="pay-now-btn"
+      >
+        Pay Now
+      </button>
+    </div>
+  }
+</div>

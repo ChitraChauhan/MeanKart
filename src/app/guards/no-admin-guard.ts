@@ -22,6 +22,5 @@ export class NoAdminGuard implements CanActivate {
         }
       })
     );
-    return true;
   }
 }

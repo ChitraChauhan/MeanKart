@@ -13,6 +13,9 @@ import { AdminDashboard } from './components/admin/dashboard/dashboard';
 import { AdminProductsComponent } from './components/admin/products/products.component';
 import { ProductFormComponent } from './components/admin/product-form/product-form.component';
 import {NoAdminGuard} from './guards/no-admin-guard';
+import { CheckoutComponent } from './components/checkout/checkout.component';
+import {OrderHistoryComponent} from './components/order/order-history/order-history.component';
+import {OrderDetailComponent} from './components/order-detail/order-detail';
 
 export const routes: Routes = [
   {
@@ -38,7 +41,22 @@ export const routes: Routes = [
   {
     path: 'profile',
     loadComponent: () => import('./components/user/profile/profile').then(m => m.Profile),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'checkout',
+    component: CheckoutComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'my-orders',
+    component: OrderHistoryComponent,
+    canActivate: [AuthGuard, NoAdminGuard]
+  },
+  {
+    path: 'orders/:id',
+    component: OrderDetailComponent,
+    canActivate: [AuthGuard, NoAdminGuard]
   },
   // Admin routes
   {

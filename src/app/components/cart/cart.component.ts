@@ -5,13 +5,15 @@ import { CartService } from '../../services/cart.service';
 import { ModalService } from '../../services/modal.service';
 import {AsyncPipe, DecimalPipe} from '@angular/common';
 import {environment} from '../../../../environment';
+import {Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-cart',
   templateUrl: `./cart.component.html`,
   imports: [
     DecimalPipe,
-    AsyncPipe
+    AsyncPipe,
+    RouterLink
   ],
   styleUrls: [`./cart.component.scss`]
 })
@@ -21,7 +23,8 @@ export class CartComponent implements OnInit {
 
   constructor(
     private cartService: CartService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private router: Router  // Add this
   ) {
     this.cart$ = this.cartService.getCart();
   }
@@ -59,12 +62,7 @@ export class CartComponent implements OnInit {
     });
 
     if (confirmed) {
-      // Implement your checkout logic here
-      await this.modalService.showAlert({
-        title: 'Checkout',
-        message: 'Proceeding to checkout!',
-        confirmText: 'OK'
-      });
+      this.router.navigate(['/checkout']);
 
       // Add your checkout navigation or API call here
       // this.router.navigate(['/checkout']);

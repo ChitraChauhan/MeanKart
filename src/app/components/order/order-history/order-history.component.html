@@ -1,0 +1,214 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">My Orders</h1>
+    <p class="text-gray-600">View your order history and track your shipments</p>
+  </div>
+
+  @if (isLoading) {
+    <div class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+  }
+
+  @if (!isLoading && orders.length === 0) {
+    <div class="bg-white rounded-lg shadow p-8 text-center">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2
+                 m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0
+                 012 2v2M7 7h10"></path>
+      </svg>
+      <h3 class="mt-2 text-lg font-medium text-gray-900">No orders yet</h3>
+      <p class="mt-1 text-gray-500">You haven't placed any orders yet.</p>
+      <div class="mt-6">
+        <a routerLink="/products" class="inline-flex items-center px-4 py-2 border border-transparent
+           text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700
+           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Start Shopping
+        </a>
+      </div>
+    </div>
+  }
+
+  @if (!isLoading && orders.length > 0) {
+    <div class="bg-white shadow overflow-hidden sm:rounded-md">
+      <ul class="divide-y divide-gray-200">
+        @for (order of orders; track order._id) {
+          <li class="border-b border-gray-200">
+            <div class="px-4 py-4 sm:px-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="text-sm font-medium text-blue-600">Order #{{ order.orderNumber }}</span>
+                  <span class="ml-2 px-2.5 py-0.5 rounded-full text-xs font-medium"
+                  >
+                    @switch (order.shippingStatus) {
+                      @case ('pending') {
+                        <span class="bg-yellow-100 text-yellow-800"> {{ getStatusDisplay(order.shippingStatus) }} </span>
+                      }
+                      @case ('shipped') {
+                        <span class="bg-blue-100 text-blue-800"> {{ getStatusDisplay(order.shippingStatus) }} </span>
+                      }
+                      @case ('delivered') {
+                        <span class="bg-green-100 text-green-800"> {{ getStatusDisplay(order.shippingStatus) }} </span>
+                      }
+                      @case ('cancelled') {
+                        <span class="bg-red-100 text-red-800"> {{ getStatusDisplay(order.shippingStatus) }} </span>
+                      }
+                      @default {
+                        <span class="bg-gray-100 text-gray-800"> {{ getStatusDisplay(order.shippingStatus) }} </span>
+                      }
+                    }
+                  </span>
+
+                </div>
+                <div class="text-sm text-gray-500">
+                  {{ formatDate(order.createdAt) }}
+                </div>
+              </div>
+
+              <div class="mt-2 sm:flex sm:justify-between">
+                <div class="sm:flex">
+                  <p class="flex items-center text-sm text-gray-500">
+                    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                         fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd"
+                            d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7
+                               0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                            clip-rule="evenodd"/>
+                    </svg>
+                    {{ order?.shippingAddress?.city }}, {{ order?.shippingAddress?.state }}
+                  </p>
+                </div>
+                <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                  <p>Total:
+                    <span class="font-medium text-gray-900">{{ order.total | currency:'USD' }}</span>
+                  </p>
+                  <span class="mx-1 text-gray-400" aria-hidden="true">&middot;</span>
+                  <p>{{ order.items.length }} {{ order.items.length === 1 ? 'item' : 'items' }}</p>
+                </div>
+              </div>
+
+              <div class="mt-4 flex items-center justify-between">
+                <div class="flex -space-x-2 overflow-hidden">
+                  @for (item of order.items.slice(0, 4); track $index) {
+                    <img [src]="ASSET_BASE_URL + item.image || 'assets/images/placeholder-product.png'"
+                         [alt]="item.name"
+                         class="h-10 w-10 ring-2 ring-white">
+                  }
+                  @if (order.items.length > 4) {
+                    <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center
+                                justify-center text-xs font-medium text-gray-500">
+                      +{{ order.items.length - 4 }}
+                    </div>
+                  }
+                </div>
+                <button (click)="viewOrderDetails(order._id)"
+                        class="text-sm font-medium text-blue-600 hover:text-blue-500">
+                  View Order<span class="sr-only">, {{ order.orderNumber }}</span>
+                </button>
+              </div>
+            </div>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+
+  <!-- Pagination -->
+  @if (!isLoading && totalPages > 1) {
+    <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-8">
+      <div class="flex-1 flex justify-between sm:hidden">
+        <button
+          (click)="onPageChange(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium
+                 rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50
+                 disabled:cursor-not-allowed">
+          Previous
+        </button>
+        <button
+          (click)="onPageChange(currentPage + 1)"
+          [disabled]="currentPage === totalPages"
+          class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium
+                 rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50
+                 disabled:cursor-not-allowed">
+          Next
+        </button>
+      </div>
+
+      <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm text-gray-700">
+            Showing <span class="font-medium">{{ (currentPage - 1) * itemsPerPage + 1 }}</span>
+            to <span class="font-medium">{{ Math.min(currentPage * itemsPerPage, totalItems) }}</span>
+            of <span class="font-medium">{{ totalItems }}</span> results
+          </p>
+        </div>
+        <div>
+          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+            <button
+              (click)="onPageChange(currentPage - 1)"
+              [disabled]="currentPage === 1"
+              class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300
+                     bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50
+                     disabled:cursor-not-allowed">
+              <span class="sr-only">Previous</span>
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                   fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd"
+                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293
+                         3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0
+                         010-1.414l4-4a1 1 0 011.414 0z"
+                      clip-rule="evenodd"/>
+              </svg>
+            </button>
+
+            @for (page of getPaginationArray(); track $index) {
+              @if (page !== '...') {
+                @if (page === currentPage) {
+                  <button
+                    (click)="onPageChange(page)"
+                    class="relative inline-flex items-center px-4 py-2 border text-sm font-medium
+           bg-blue-50 border-blue-500 text-blue-600">
+                    {{ page }}
+                  </button>
+                } @else {
+                  <button
+                    (click)="onPageChange(page)"
+                    class="relative inline-flex items-center px-4 py-2 border text-sm font-medium
+           bg-white border-gray-300 text-gray-500 hover:bg-gray-50">
+                    {{ page }}
+                  </button>
+                }
+
+              } @else {
+                <span class="relative inline-flex items-center px-4 py-2 border border-gray-300
+                             bg-white text-sm font-medium text-gray-700">
+                  {{ page }}
+                </span>
+              }
+            }
+
+            <button
+              (click)="onPageChange(currentPage + 1)"
+              [disabled]="currentPage === totalPages"
+              class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300
+                     bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50
+                     disabled:cursor-not-allowed">
+              <span class="sr-only">Next</span>
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+                   viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10
+                         7.293 6.707a1 1 0 011.414-1.414l4 4a1 1
+                         0 010 1.414l-4 4a1 1 0-1.414 0z"
+                      clip-rule="evenodd"/>
+              </svg>
+            </button>
+          </nav>
+        </div>
+      </div>
+    </div>
+  }
+</div>
