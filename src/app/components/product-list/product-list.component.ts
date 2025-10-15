@@ -123,7 +123,9 @@ export class ProductListComponent implements OnInit {
         this.router.navigate(['/login']);
         this.notificationService.show({
           type: 'success',
-          message: 'Please Login/Register in order to add to cart',
+          message:
+            'Missing Cart items?\n' +
+            'Login to see the items you added previously\n',
           duration: 3000,
         });
       }

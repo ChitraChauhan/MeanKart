@@ -24,23 +24,11 @@ interface ShippingAddress {
 
 export interface Order {
   _id: string;
-  orderNumber: string;
+  razorpayOrderId: string;
   userId: string;
   items: OrderItem[];
-  subtotal: number;
-  tax: number;
   shipping: number;
-  total: number;
-  payment: {
-    razorpayOrderId: string;
-    razorpayPaymentId?: string;
-    razorpaySignature?: string;
-    status: string;
-    amount: number;
-    currency: string;
-    method?: string;
-    paidAt?: Date;
-  };
+  amount: number;
   shippingAddress: ShippingAddress;
   status: 'created' | 'attempted' | 'paid';
   shippingStatus:
@@ -83,18 +71,6 @@ export class OrderService {
   private apiUrl = environment.apiUrl + '/api/orders';
 
   constructor(private http: HttpClient) {}
-
-  /**
-   * Create a new order
-   */
-  createOrder(
-    orderData: CreateOrderRequest,
-  ): Observable<{ success: boolean; order: Order }> {
-    return this.http.post<{ success: boolean; order: Order }>(
-      this.apiUrl,
-      orderData,
-    );
-  }
 
   /**
    * Get order by ID

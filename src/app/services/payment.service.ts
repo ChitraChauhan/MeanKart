@@ -43,12 +43,9 @@ export class PaymentService {
 
   constructor(private http: HttpClient) {}
 
-  createOrder(
-    amount: number,
-    items: any[] = [],
-  ): Observable<CreateOrderResponse> {
-    return this.http.post<CreateOrderResponse>(`${this.apiUrl}/order`, {
-      amount: Math.round(amount * 100),
+  createOrder(amount: number, items: any[] = []): Observable<RazorpayOrder> {
+    return this.http.post<RazorpayOrder>(`${this.apiUrl}/order`, {
+      amount: Math.round(amount),
       currency: 'INR',
       items: items.map((item) => ({
         productId: item.productId || item._id,

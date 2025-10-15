@@ -57,7 +57,7 @@
       <div class="bg-white shadow overflow-hidden sm:rounded-lg">
         <div class="px-4 py-5 sm:px-6 flex justify-between items-center flex-wrap gap-4">
           <div>
-            <h1 class="text-2xl font-bold text-gray-900">Order #{{ order.orderNumber }}</h1>
+            <h1 class="text-2xl font-bold text-gray-900">Order #{{ order.razorpayOrderId }}</h1>
             <p class="mt-1 text-sm text-gray-500">
               Placed on {{ order.createdAt | date:'mediumDate' }} at {{ order.createdAt | date:'shortTime' }}
             </p>

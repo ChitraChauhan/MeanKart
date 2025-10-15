@@ -38,7 +38,7 @@
             <div class="px-4 py-4 sm:px-6">
               <div class="flex items-center justify-between">
                 <div>
-                  <span class="text-sm font-medium text-blue-600">Order #{{ order.orderNumber }}</span>
+                  <span class="text-sm font-medium text-blue-600">Order #{{ order.razorpayOrderId }}</span>
                   <span class="ml-2 px-2.5 py-0.5 rounded-full text-xs font-medium"
                   >
                     @switch (order.shippingStatus) {
@@ -83,7 +83,7 @@
                 </div>
                 <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
                   <p>Total:
-                    <span class="font-medium text-gray-900">{{ order.total | currency:'INR' }}</span>
+                    <span class="font-medium text-gray-900">{{ order.amount | currency:'INR' }}</span>
                   </p>
                   <span class="mx-1 text-gray-400" aria-hidden="true">&middot;</span>
                   <p>{{ order.items.length }} {{ order.items.length === 1 ? 'item' : 'items' }}</p>
@@ -91,22 +91,22 @@
               </div>
 
               <div class="mt-4 flex items-center justify-between">
-                <div class="flex -space-x-2 overflow-hidden">
+                <div class="flex -space-x-2 overflow-hidden items-center">
                   @for (item of order.items.slice(0, 4); track $index) {
                     <img [src]="ASSET_BASE_URL + item.image || 'assets/images/placeholder-product.png'"
                          [alt]="item.name"
-                         class="h-10 w-10 ring-2 ring-white">
+                         class="h-20 w-20 ring-2 ring-white p-2">
                   }
                   @if (order.items.length > 4) {
                     <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center
-                                justify-center text-xs font-medium text-gray-500">
+                                justify-center text-xs font-medium text-gray-500 cursor-pointer" (click)="viewOrderDetails(order._id)">
                       +{{ order.items.length - 4 }}
                     </div>
                   }
                 </div>
                 <button (click)="viewOrderDetails(order._id)"
                         class="text-sm font-medium text-blue-600 hover:text-blue-500">
-                  View Order<span class="sr-only">, {{ order.orderNumber }}</span>
+                  View Order<span class="sr-only">, {{ order.razorpayOrderId }}</span>
                 </button>
               </div>
             </div>

@@ -46,12 +46,21 @@
 
         <button
           (click)="addToCart()"
-          class="add-to-cart"
+          class="add-to-cart bg-yellow-500 hover:bg-yellow-600  mb-2"
           [class.disabled]="!isInStock()"
           [disabled]="!isInStock()"
         >
           {{ isInStock() ? 'Add to Cart' : 'Out of Stock' }}
         </button>
+        @if (isInStock()) {
+          <button
+            (click)="payNow()"
+            [disabled]="quantity <= 0"
+            class="pay-now-btn"
+          >
+            Buy Now
+          </button>
+        }
       </div>
     </div>
   }

@@ -2,9 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProductService } from '../../services/product.service';
-import { CartService } from '../../services/cart.service';
+import { CartItem, CartService } from '../../services/cart.service';
 import { environment } from '../../../../environment';
 import { NotificationService } from '../../services/notification.service';
+import { AuthService } from '../../services/auth.service';
+import { PaymentService, RazorpayOrder } from '../../services/payment.service';
+import { UserService } from '../../services/user.service';
+
+declare var Razorpay: any;
+interface RazorpayResponse {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+}
 
 @Component({
   selector: 'app-product-detail',
@@ -26,6 +36,9 @@ export class ProductDetailComponent implements OnInit {
     private productService: ProductService,
     private cartService: CartService,
     private notificationService: NotificationService,
+    private authService: AuthService,
+    private paymentService: PaymentService,
+    private userService: UserService,
   ) {}
 
   ngOnInit(): void {
@@ -56,7 +69,7 @@ export class ProductDetailComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading product:', err);
-        this.error = 'Failed to load product details';
+        this.error = 'Failed to load product details. Please try again.';
         this.loading = false;
       },
     });
@@ -92,5 +105,143 @@ export class ProductDetailComponent implements OnInit {
   isInStock(): boolean {
     if (this.product.stock === undefined) return true;
     return this.product.stock > 0;
+  }
+
+  checkAddressAndProceed(): void {
+    if (!this.product) return;
+
+    this.authService.isAuthenticated$.subscribe(({ auth }) => {
+      if (auth) {
+        if (this.quantity <= 0) return;
+
+        this.userService.getUserAddresses().subscribe({
+          next: (addresses) => {
+            if (addresses && addresses.length > 0) {
+              this.initiatePayment();
+            } else {
+              this.notificationService.show({
+                type: 'info',
+                message:
+                  'Please add a shipping address before proceeding to payment',
+                duration: 3000,
+              });
+              this.router.navigate(['/profile']);
+            }
+          },
+          error: (error) => {
+            console.error('Error checking user addresses:', error);
+            this.notificationService.show({
+              type: 'error',
+              message: 'Error checking your addresses. Please try again.',
+              duration: 3000,
+            });
+          },
+        });
+      } else {
+        this.router.navigate(['/login']);
+        this.notificationService.show({
+          type: 'info',
+          message: 'Please login to continue with your purchase',
+          duration: 3000,
+        });
+      }
+    });
+  }
+
+  private initiatePayment(): void {
+    if (!this.product) return;
+
+    try {
+      let cartItems: CartItem[] = [
+        {
+          product: this.product._id,
+          quantity: this.quantity,
+          price: this.product.price,
+          name: this.product.name,
+          image: this.product.imageUrl?.[0] || '',
+        },
+      ];
+
+      const totalAmount = this.product.price * this.quantity;
+      this.paymentService.createOrder(totalAmount, cartItems).subscribe({
+        next: (response: RazorpayOrder) => {
+          const razorpayOrder = response;
+
+          const options = {
+            key: environment.RAZORPAY_KEY_ID,
+            amount: razorpayOrder.amount,
+            currency: razorpayOrder.currency || 'INR',
+            name: 'MeanKart',
+            description: 'Direct Purchase',
+            order_id: razorpayOrder.id,
+            items: cartItems,
+            handler: async (response: RazorpayResponse) => {
+              const verification: any = await this.paymentService
+                .verifyPayment(response)
+                .toPromise();
+              if (verification.success) {
+                this.notificationService.show({
+                  type: 'success',
+                  message: 'Payment Successful! Your order has been placed.',
+                  duration: 5000,
+                });
+                this.router.navigate(['/orders']);
+              } else {
+                this.notificationService.show({
+                  type: 'error',
+                  message:
+                    'Payment verification failed. Please contact support.',
+                  duration: 5000,
+                });
+              }
+            },
+            prefill: {
+              name: 'Customer Name', // TODO: Get from user profile
+              email: 'customer@example.com', // TODO: Get from user profile
+              contact: '9876543210', // TODO: Get from user profile
+            },
+            theme: {
+              color: '#3399cc',
+            },
+            modal: {
+              ondismiss: () => {
+                this.notificationService.show({
+                  type: 'info',
+                  message: 'Payment window closed',
+                  duration: 2000,
+                });
+              },
+            },
+          };
+
+          const rzp = new Razorpay(options);
+          rzp.open();
+
+          const destroyCheckout = this.router.events.subscribe(() => {
+            rzp.close();
+            destroyCheckout.unsubscribe();
+          });
+        },
+        error: (error) => {
+          console.error('Error creating order:', error);
+          this.notificationService.show({
+            type: 'error',
+            message: 'Error creating order. Please try again.',
+            duration: 3000,
+          });
+        },
+      });
+    } catch (error) {
+      console.error('Payment initialization error:', error);
+      this.notificationService.show({
+        type: 'error',
+        message: 'Error initializing payment. Please try again.',
+        duration: 3000,
+      });
+    }
+  }
+
+  payNow(): void {
+    this.checkAddressAndProceed();
   }
 }
