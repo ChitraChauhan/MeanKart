@@ -2,20 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProductService } from '../../services/product.service';
-import { CartItem, CartService } from '../../services/cart.service';
+import { CartService } from '../../services/cart.service';
 import { environment } from '../../../../environment';
 import { NotificationService } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
-import { PaymentService, RazorpayOrder } from '../../services/payment.service';
+import { PaymentService } from '../../services/payment.service';
 import { UserService } from '../../services/user.service';
 import { ImageService } from '../../services/image.service';
+import {
+  CartItem,
+  RazorpayOrder,
+  RazorpayResponse,
+} from '../../common/constant';
 
 declare var Razorpay: any;
-interface RazorpayResponse {
-  razorpay_payment_id: string;
-  razorpay_order_id: string;
-  razorpay_signature: string;
-}
 
 @Component({
   selector: 'app-product-detail',

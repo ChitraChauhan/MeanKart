@@ -2,32 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environment';
-
-export interface UserProfile {
-  _id?: string;
-  name: string;
-  email: string;
-  currentPassword?: string;
-  newPassword?: string;
-  confirmPassword?: string;
-  isAdmin: boolean;
-}
-
-export interface Address {
-  _id?: string;
-  name: string;
-  phone: string;
-  address: string;
-  addressLine2?: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
-  isDefault: boolean;
-  userId?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+import { Address, UserProfile } from '../common/constant';
 
 @Injectable({
   providedIn: 'root',

@@ -1,9 +1,4 @@
-interface ModalOptions {
-  title: string;
-  message: string;
-  confirmText?: string;
-  cancelText?: string;
-}
+import { ModalOptions } from '../common/constant';
 
 class TailwindModal {
   private modal: HTMLElement | null = null;

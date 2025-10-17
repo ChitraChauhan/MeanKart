@@ -1,15 +1,6 @@
 import { Injectable } from '@angular/core';
 import { modal } from './modal';
-
-export interface AlertOptions {
-  title: string;
-  message: string;
-  confirmText?: string;
-}
-
-export interface ConfirmOptions extends AlertOptions {
-  cancelText?: string;
-}
+import { AlertOptions, ConfirmOptions } from '../common/constant';
 
 @Injectable({
   providedIn: 'root',

@@ -2,67 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environment';
-
-interface OrderItem {
-  productId: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-  totalPrice: number;
-}
-
-interface ShippingAddress {
-  name: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country?: string;
-}
-
-export interface Order {
-  _id: string;
-  razorpayOrderId: string;
-  userId: string;
-  items: OrderItem[];
-  shipping: number;
-  amount: number;
-  shippingAddress: ShippingAddress;
-  status: 'created' | 'attempted' | 'paid';
-  shippingStatus:
-    | 'pending'
-    | 'processing'
-    | 'shipped'
-    | 'delivered'
-    | 'cancelled'
-    | 'refunded'
-    | 'failed';
-  createdAt: Date;
-  updatedAt: Date;
-  formattedDate?: string;
-  statusDisplay?: string;
-}
-
-interface CreateOrderRequest {
-  items: Array<{
-    productId: string;
-    quantity: number;
-  }>;
-  shippingAddress: ShippingAddress;
-  paymentMethod: string;
-  totalAmount: number;
-  tax?: number;
-  shipping?: number;
-  razorpayOrderId?: string;
-}
-
-interface UpdateOrderPaymentRequest {
-  razorpayPaymentId: string;
-  razorpayOrderId: string;
-  razorpaySignature: string;
-}
+import { Order, UpdateOrderPaymentRequest } from '../common/constant';
 
 @Injectable({
   providedIn: 'root',

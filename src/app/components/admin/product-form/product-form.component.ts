@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -11,8 +11,10 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AdminProductService } from '../../../services/admin-product.service';
 import { ModalService } from '../../../services/modal.service';
 import { ImageService } from '../../../services/image.service';
-
-type ImageControlValue = string | File | null;
+import { take } from 'rxjs/operators';
+import { Category } from '../../../common/constant';
+import { ProductService } from '../../../services/product.service';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-product-form',
@@ -26,15 +28,18 @@ export class ProductFormComponent implements OnInit, OnDestroy {
   productId: string | null = null;
   loading = false;
   error: string | null = null;
+  categories: Category[] = [];
   private blobUrls: Map<string, string> = new Map();
-  private modalService = inject(ModalService);
 
   constructor(
     private fb: FormBuilder,
-    private productService: AdminProductService,
+    private adminProductService: AdminProductService,
     private route: ActivatedRoute,
     private router: Router,
     public imageService: ImageService,
+    public modalService: ModalService,
+    public productService: ProductService,
+    private notificationService: NotificationService,
   ) {
     this.productForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -53,11 +58,11 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  createImageControl(): FormControl<ImageControlValue> {
-    return this.fb.control<ImageControlValue>(
+  createImageControl(): FormControl<string | File | null> {
+    return this.fb.control<string | File | null>(
       null,
       Validators.required,
-    ) as FormControl<ImageControlValue>;
+    ) as FormControl<string | File | null>;
   }
 
   async getFormData(): Promise<any> {
@@ -95,6 +100,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.loadCategories();
     this.route.paramMap.subscribe((params) => {
       this.productId = params.get('id');
       if (this.productId) {
@@ -104,6 +110,24 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  loadCategories(): void {
+    this.productService
+      .getCategories()
+      .pipe(take(1))
+      .subscribe({
+        next: (categories) => {
+          this.categories = categories;
+        },
+        error: (error) => {
+          console.error('Error loading categories:', error);
+          this.notificationService.show({
+            message: 'Failed to load categories',
+            type: 'error',
+          });
+        },
+      });
+  }
+
   get images() {
     return this.productForm.get('imageUrl') as FormArray;
   }
@@ -111,7 +135,9 @@ export class ProductFormComponent implements OnInit, OnDestroy {
   async loadProduct(id: string): Promise<void> {
     try {
       this.loading = true;
-      const product = await this.productService.getProductById(id).toPromise();
+      const product = await this.adminProductService
+        .getProductById(id)
+        .toPromise();
       if (!product) return;
 
       // Clear existing images
@@ -121,7 +147,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
 
       // Handle image URLs from server
       if (product.imageUrl && Array.isArray(product.imageUrl)) {
-        product.imageUrl.forEach((url) => {
+        product.imageUrl.forEach((url: any) => {
           this.images.push(this.fb.control(url, Validators.required));
         });
       }
@@ -140,12 +166,15 @@ export class ProductFormComponent implements OnInit, OnDestroy {
         }
       }
 
+      const categoryInfo: any =
+        this.categories.find((c) => c._id === product.category) ?? null;
+      console.log('categoryInfo', categoryInfo);
       this.productForm.patchValue({
         name: product.name,
         description: product.description,
         price: product.price,
         stock: product.stock,
-        category: product.category,
+        category: categoryInfo._id,
         specifications: specifications,
       });
       this.loading = false;
@@ -168,22 +197,24 @@ export class ProductFormComponent implements OnInit, OnDestroy {
       const formData = await this.getFormData();
 
       if (this.isEditMode && this.productId) {
-        this.productService.updateProduct(this.productId, formData).subscribe({
-          next: () => {
-            this.loading = false;
-            this.modalService.showAlert({
-              title: 'Success',
-              message: 'Product updated successfully!',
-            });
-          },
-          error: (error) => {
-            console.error('Error updating product:', error);
-            this.error = error.error?.message || 'Failed to update product';
-            this.loading = false;
-          },
-        });
+        this.adminProductService
+          .updateProduct(this.productId, formData)
+          .subscribe({
+            next: () => {
+              this.loading = false;
+              this.modalService.showAlert({
+                title: 'Success',
+                message: 'Product updated successfully!',
+              });
+            },
+            error: (error) => {
+              console.error('Error updating product:', error);
+              this.error = error.error?.message || 'Failed to update product';
+              this.loading = false;
+            },
+          });
       } else {
-        this.productService.createProduct(formData).subscribe({
+        this.adminProductService.createProduct(formData).subscribe({
           next: () => {
             this.loading = false;
             this.modalService.showAlert({

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { OrderService, Order } from '../../../services/order.service';
+import { OrderService } from '../../../services/order.service';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { ImageService } from '../../../services/image.service';
+import { Order } from '../../../common/constant';
 
 @Component({
   selector: 'app-order-detail',

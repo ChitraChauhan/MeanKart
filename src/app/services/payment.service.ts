@@ -2,40 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environment';
-
-export interface PaymentVerificationData {
-  razorpay_order_id: string;
-  razorpay_payment_id: string;
-  razorpay_signature: string;
-}
-
-export interface PaymentVerificationResponse {
-  success: boolean;
-  message: string;
-  order?: any;
-  error?: string;
-}
-
-export interface RazorpayOrder {
-  id: string;
-  amount: number;
-  amount_due: number;
-  amount_paid: number;
-  currency: string;
-  receipt: string;
-  status: string;
-  attempts: number;
-  created_at: number;
-  notes: any[];
-}
-
-export interface CreateOrderResponse {
-  success: boolean;
-  order: RazorpayOrder;
-  razorpayOrderId: string;
-  error?: string;
-  message?: string;
-}
+import {
+  PaymentVerificationResponse,
+  RazorpayOrder,
+  RazorpayResponse,
+} from '../common/constant';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
@@ -58,7 +29,7 @@ export class PaymentService {
   }
 
   verifyPayment(
-    data: PaymentVerificationData,
+    data: RazorpayResponse,
   ): Observable<PaymentVerificationResponse> {
     return this.http.post<PaymentVerificationResponse>(
       `${this.apiUrl}/verify`,

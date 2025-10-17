@@ -7,22 +7,10 @@ import {
   ReactiveFormsModule,
   FormsModule,
 } from '@angular/forms';
-import { UserService, UserProfile } from '../../../services/user.service';
+import { UserService } from '../../../services/user.service';
 import { AuthService } from '../../../services/auth.service';
 import { NotificationService } from '../../../services/notification.service';
-
-export interface Address {
-  _id?: string;
-  name: string;
-  phone: string;
-  address: string;
-  addressLine2?: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
-  isDefault: boolean;
-}
+import { Address } from '../../../common/constant';
 
 @Component({
   selector: 'app-profile',

@@ -4,27 +4,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { environment } from '../../../environment';
-
-export interface CartItem {
-  _id?: string;
-  product:
-    | string
-    | { _id: string; name: string; price: number; imageUrl: string[] };
-  name: string;
-  price: number;
-  quantity: number;
-  image?: string;
-}
-
-export interface Cart {
-  _id?: string;
-  user: string;
-  items: CartItem[];
-  total: number;
-  createdAt?: Date;
-  updatedAt?: Date;
-  Quantity: number;
-}
+import { Cart } from '../common/constant';
 
 @Injectable({
   providedIn: 'root',
@@ -60,7 +40,10 @@ export class CartService {
       .pipe(tap((cart) => this.cartSubject.next(cart)));
   }
 
-  addToCart(productId: string, quantity: number = 1): Observable<Cart> {
+  addToCart(
+    productId: string | undefined,
+    quantity: number = 1,
+  ): Observable<Cart> {
     return this.http
       .post<Cart>(`${this.apiUrl}/items`, { productId, quantity })
       .pipe(tap((cart) => this.cartSubject.next(cart)));

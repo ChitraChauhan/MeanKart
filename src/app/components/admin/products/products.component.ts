@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AdminProductService } from '../../../services/admin-product.service';
-import { Product } from '../../../models/product.model';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
@@ -9,6 +8,7 @@ import { ModalService } from '../../../services/modal.service';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ImageService } from '../../../services/image.service';
+import { Product, ProductItemsPerPage } from '../../../common/constant';
 
 @Component({
   selector: 'app-admin-products',
@@ -21,7 +21,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
   currentPage = 1;
   totalPages = 1;
   totalItems = 0;
-  pageSize = 12;
+  pageSize = ProductItemsPerPage;
   searchTerm = '';
   loading = false;
   error: string | null = null;

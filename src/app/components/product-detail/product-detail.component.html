@@ -19,7 +19,7 @@
           <img
             [src]="imageService.getImagePreview(product.imageUrl[currentImageIndex])"
             [alt]="product.name + ' - Image ' + (currentImageIndex + 1)"
-            class="main-image scale-90 hover:scale-105 transition-transform duration-300"
+            class="main-image scale-90 hover:scale-105 transition-transform duration-300 cursor-pointer"
           >
 
           @if (product.imageUrl.length > 1) {
@@ -47,12 +47,49 @@
           }
         </div>
 
-        <div class="description">
-          <h3>Description</h3>
-          <p>{{ product.description || 'No description available.' }}</p>
+        <div class="description mb-6">
+          <h3 class="text-lg font-semibold mb-2">Description</h3>
+          <p class="text-gray-700">{{ product.description || 'No description available.' }}</p>
         </div>
 
-        <div class="quantity-selector">
+        <!-- Specifications Section -->
+        <div class="specifications mb-6">
+          <h3 class="text-lg font-semibold mb-3">Specifications</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            @if (product.specifications.brand) {
+              <div class="spec-item">
+                <span class="font-medium text-gray-600">Brand: </span>
+                <span>{{ product.specifications.brand }}</span>
+              </div>
+            }
+            @if (product.specifications.model) {
+              <div class="spec-item">
+                <span class="font-medium text-gray-600">Model: </span>
+                <span>{{ product.specifications.model }}</span>
+              </div>
+            }
+            @if (product.specifications.color) {
+              <div class="spec-item">
+                <span class="font-medium text-gray-600">Color: </span>
+                <span>{{ product.specifications.color }}</span>
+              </div>
+            }
+            @if (product.specifications.size) {
+              <div class="spec-item">
+                <span class="font-medium text-gray-600">Size: </span>
+                <span>{{ product.specifications.size }}</span>
+              </div>
+            }
+            @if (product.specifications.weight) {
+              <div class="spec-item">
+                <span class="font-medium text-gray-600">Weight: </span>
+                <span>{{ product.specifications.weight }} KG</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="quantity-selector mb-6">
           <button (click)="updateQuantity(-1)">-</button>
           <span>{{ product?.items?.length || quantity }}</span>
           <button (click)="updateQuantity(1)">+</button>

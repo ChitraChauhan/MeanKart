@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AdminService } from '../../../services/admin.service';
@@ -16,11 +16,10 @@ export class AdminDashboard implements OnInit {
   products: any[] = [];
   loading = false;
 
-  private modalService = inject(ModalService);
-
   constructor(
     private adminService: AdminService,
     private notificationService: NotificationService,
+    private modalService: ModalService,
   ) {}
 
   ngOnInit(): void {
@@ -86,7 +85,6 @@ export class AdminDashboard implements OnInit {
         const index = this.users.findIndex((u) => u._id === updatedUser._id);
         if (index !== -1) {
           this.users[index] = updatedUser;
-          console.log('this.users[index]', this.users[index]);
         }
         this.notificationService.show({
           type: 'success',

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { OrderService, Order } from '../../../services/order.service';
+import { OrderService } from '../../../services/order.service';
 import { AuthService } from '../../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
 import { ImageService } from '../../../services/image.service';
+import { Order, OrderItemsPerPage } from '../../../common/constant';
 
 @Component({
   selector: 'app-order-history',
@@ -14,8 +15,8 @@ import { ImageService } from '../../../services/image.service';
 export class OrderHistoryComponent implements OnInit {
   orders: Order[] = [];
   isLoading = true;
-  currentPage = 1;
-  itemsPerPage = 10;
+  currentPage: number = 1;
+  itemsPerPage = OrderItemsPerPage;
   totalItems = 0;
   totalPages = 1;
 
@@ -41,14 +42,13 @@ export class OrderHistoryComponent implements OnInit {
   loadOrders(page: number = 1): void {
     this.isLoading = true;
 
-    const urlPage = new URL(window.location.href).searchParams.get('page');
-    const currentPage = urlPage ? +urlPage : page;
+    const urlPage = new URL(window.location.href).searchParams.get('page') || 0;
+    const currentPage: number = page ? page : Number(+urlPage) || 1;
 
     this.orderService
       .getMyOrders({ page: currentPage, limit: this.itemsPerPage })
       .subscribe({
         next: (response) => {
-          console.log('Orders loaded:', response);
           this.orders = response.orders || [];
           this.currentPage = response.currentPage || currentPage;
           this.totalItems = response.total || 0;
@@ -95,7 +95,7 @@ export class OrderHistoryComponent implements OnInit {
    */
   getPaginationArray(): (number | string)[] {
     const totalPages = this.totalPages;
-    const currentPage = this.currentPage;
+    const currentPage: number = this.currentPage;
     const delta = 2;
     const range: (number | string)[] = [];
 

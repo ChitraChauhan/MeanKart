@@ -1,19 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { PaymentService, RazorpayOrder } from '../../services/payment.service';
-import { CartItem, CartService } from '../../services/cart.service';
+import { PaymentService } from '../../services/payment.service';
+import { CartService } from '../../services/cart.service';
 import { Router } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import { environment } from '../../../../environment';
 import { NotificationService } from '../../services/notification.service';
 import { UserService } from '../../services/user.service';
+import {
+  CartItem,
+  RazorpayOrder,
+  RazorpayResponse,
+} from '../../common/constant';
 
 declare var Razorpay: any;
-
-interface RazorpayResponse {
-  razorpay_payment_id: string;
-  razorpay_order_id: string;
-  razorpay_signature: string;
-}
 
 @Component({
   selector: 'app-checkout',
