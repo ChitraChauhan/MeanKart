@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService, Order } from '../../../services/order.service';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
-import { environment } from '../../../../../environment';
+import { ImageService } from '../../../services/image.service';
 
 @Component({
   selector: 'app-order-detail',
@@ -14,12 +14,12 @@ export class OrderDetailComponent implements OnInit {
   order: Order | null = null;
   loading = true;
   error: string | null = null;
-  ASSET_BASE_URL = environment.assetsBaseUrl || 'assets/';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private orderService: OrderService,
+    public imageService: ImageService,
   ) {}
 
   ngOnInit(): void {

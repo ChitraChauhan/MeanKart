@@ -182,7 +182,7 @@
               <div class="flex justify-between items-start">
                 <div>
                   <div class="flex items-center">
-                    <h4 class="font-medium text-gray-900">{{ address.fullName }}</h4>
+                    <h4 class="font-medium text-gray-900">{{ address.name }}</h4>
                     @if (address.isDefault) {
                       <span class="ml-2 px-2 py-0.5 text-xs font-medium bg-indigo-100 text-indigo-800 rounded-full">
                         Default
@@ -191,7 +191,7 @@
                   </div>
                   <p class="text-sm text-gray-600">{{ address.phone }}</p>
                   <p class="text-sm text-gray-800">
-                    {{ address.addressLine1 }}<br>
+                    {{ address.address }}<br>
                     @if (address.addressLine2) {
                       {{ address.addressLine2 }}<br>
                     }

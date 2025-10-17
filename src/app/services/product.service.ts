@@ -25,7 +25,7 @@ export class ProductService {
   ): Observable<PaginatedResponse<Product>> {
     let params = new HttpParams()
       .set('page', page.toString())
-      .set('pageSize', '8');
+      .set('pageSize', '12');
 
     if (keyword) {
       params = params.set('keyword', keyword);

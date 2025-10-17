@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  assetsBaseUrl: 'assets/',
-  apiUrl: 'http://localhost:5000',// Update this with your actual API URL
+  assetsBaseUrl: 'http://localhost:5000/uploads/',
+  apiUrl: 'http://localhost:5000',
   RAZORPAY_KEY_ID: 'rzp_test_RQamGlPahxX3Dd',
-  RAZORPAY_KEY_SECRET: 'YF0ufU7yInv6NtbrDbjppfNT'
+  RAZORPAY_KEY_SECRET: 'YF0ufU7yInv6NtbrDbjppfNT',
 };

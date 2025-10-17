@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 import { CartService } from '../../services/cart.service';
 import { ModalService } from '../../services/modal.service';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
-import { environment } from '../../../../environment';
 import { Router, RouterLink } from '@angular/router';
+import { ImageService } from '../../services/image.service';
 
 @Component({
   selector: 'app-cart',
@@ -14,12 +14,12 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class CartComponent implements OnInit {
   cart$: Observable<any>;
-  ASSET_BASE_URL = environment.assetsBaseUrl || 'assets/';
 
   constructor(
     private cartService: CartService,
     private modalService: ModalService,
     private router: Router,
+    public imageService: ImageService,
   ) {
     this.cart$ = this.cartService.getCart();
   }

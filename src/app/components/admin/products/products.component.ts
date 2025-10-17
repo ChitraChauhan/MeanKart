@@ -4,11 +4,11 @@ import { Product } from '../../../models/product.model';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
-import { environment } from '../../../../../environment';
 import { NotificationService } from '../../../services/notification.service';
 import { ModalService } from '../../../services/modal.service';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ImageService } from '../../../services/image.service';
 
 @Component({
   selector: 'app-admin-products',
@@ -21,12 +21,10 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
   currentPage = 1;
   totalPages = 1;
   totalItems = 0;
-  pageSize = 9;
+  pageSize = 12;
   searchTerm = '';
   loading = false;
   error: string | null = null;
-  ASSET_BASE_URL = environment.assetsBaseUrl || 'assets/';
-
   private searchSubject = new Subject<string>();
   private searchSubscription: Subscription;
 
@@ -34,6 +32,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
     private productService: AdminProductService,
     private notificationService: NotificationService,
     private modalService: ModalService,
+    public imageService: ImageService,
   ) {
     this.searchSubscription = this.searchSubject
       .pipe(debounceTime(1000), distinctUntilChanged())

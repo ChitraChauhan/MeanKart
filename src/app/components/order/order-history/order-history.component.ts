@@ -3,7 +3,7 @@ import { OrderService, Order } from '../../../services/order.service';
 import { AuthService } from '../../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
-import { environment } from '../../../../../environment';
+import { ImageService } from '../../../services/image.service';
 
 @Component({
   selector: 'app-order-history',
@@ -18,12 +18,12 @@ export class OrderHistoryComponent implements OnInit {
   itemsPerPage = 10;
   totalItems = 0;
   totalPages = 1;
-  ASSET_BASE_URL = environment.assetsBaseUrl || 'assets/';
 
   constructor(
     private orderService: OrderService,
     private authService: AuthService,
     private router: Router,
+    public imageService: ImageService,
   ) {}
 
   ngOnInit(): void {

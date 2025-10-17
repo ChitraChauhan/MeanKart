@@ -22,7 +22,7 @@
         @for (item of cart.items; track item._id) {
           <div class="cart-item">
             <img
-              [src]="ASSET_BASE_URL + item.image || 'assets/placeholder-product.png'"
+              [src]="imageService.getImagePreview(item.image)"
               [alt]="item.name"
               class="product-image"
             >
@@ -56,8 +56,8 @@
           <span>Total:</span>
           <span>₹{{ cart.total | number:'1.2-2' }}</span>
         </div>
-        <button class="checkout-btn" (click)="checkout()">Proceed to Checkout</button>
-        <button class="clear-btn" (click)="clearCart()">Clear Cart</button>
+        <button class="checkout-btn" (click)="checkout()"><i class="fas fa-credit-card mr-2"></i> Proceed to Checkout</button>
+        <button class="clear-btn" (click)="clearCart()"><i class="fas fa-trash-alt mr-2"></i> Clear Cart</button>
       </div>
     }
 

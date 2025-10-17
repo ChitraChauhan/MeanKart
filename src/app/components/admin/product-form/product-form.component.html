@@ -106,85 +106,121 @@
         </div>
 
         <div class="form-section">
-          <h3>Images</h3>
-          <div formArrayName="imageUrl">
-            @for (image of images.controls; let i = $index; track i) {
-              <div class="image-upload-group">
-                <div class="form-group">
-                  <label [for]="'image' + i">Image URL {{ i + 1 }} *</label>
-                  <div class="image-url-input">
-                    <input
-                      type="text"
-                      [id]="'image' + i"
-                      [formControlName]="i"
-                      placeholder="https://example.com/image.jpg"
-                      [class.is-invalid]="images.controls[i].invalid && images.controls[i].touched">
+          <div class="form-section">
+            <h3>Images</h3>
+            <div formArrayName="imageUrl">
+              @for (image of images.controls; let i = $index; track i) {
+                <div class="image-upload-group">
+                  <div class="form-group flex items-center">
+                    <div>
+                      <label>{{ image.value?.name ? image.value?.name : 'Image' + (i + 1) + '*' }}</label>
 
-                    @if (images.length > 1) {
-                      <button type="button" class="btn btn-remove" (click)="removeImage(i)">
-                        <i class="fas fa-times"></i>
-                      </button>
-                    }
-                  </div>
+                      <!-- File Input - Only show if this is the last image or if the image is empty -->
+                      @if (!image.value) {
+                        <div class="file-upload-container flex items-center">
+                          <div>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              (change)="onFileChange($event, i)"
+                              class="file-input"
+                              [id]="'imageInput' + i"
+                            />
+                            @if (!image.value) {
+                              <label [for]="'imageInput' + i" class="file-upload-btn">
+                                <i class="fas fa-upload"></i> Choose File
+                              </label>
+                            }
+                          </div>
+                        </div>
+                      }
 
-                  @if (images.controls[i].errors?.['required'] && images.controls[i].touched) {
-                    <div class="error-message">Image URL is required</div>
-                  }
+                      <span class="file-name">
+                    {{ image.value?.name }}
+                  </span>
 
-                  @if (images.controls[i].value) {
-                    <div class="image-preview">
-                      <img [src]="ASSET_BASE_URL + images.controls[i].value" alt="Preview">
+                      <!-- Show error if image is required -->
+                      @if (image.invalid && (image.dirty || image.touched)) {
+                        <div class="error-message">Image is required</div>
+                      }
+                      @if (image.value) {
+                        <div class="image-preview-container">
+                          <div class="image-preview">
+                            <img [src]="imageService.getImagePreview(image.value)" alt="Preview"/>
+                          </div>
+                        </div>
+                      }
                     </div>
-                  }
+                    <button
+                      type="button"
+                      class="btn btn-small btn-danger"
+                      (click)="removeImage(i)"
+                      title="Remove image"
+                    >
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                </div>
+              }
+
+              <!-- Add Another Image Button -->
+              <div class="add-image-btn-container">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="addImage()"
+                  [disabled]="images.length >= 5"
+                >
+                  <i class="fas fa-plus"></i> Add Another Image
+                </button>
+                @if (images.length >= 5) {
+                  <div class="max-images-message">Maximum 5 images allowed</div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section full-width">
+            <h3>Specifications</h3>
+            <div formGroupName="specifications" class="specs-grid">
+              <div class="form-group">
+                <label for="brand">Brand</label>
+                <input type="text" id="brand" formControlName="brand">
+              </div>
+              <div class="form-group">
+                <label for="model">Model</label>
+                <input type="text" id="model" formControlName="model">
+              </div>
+              <div class="form-group">
+                <label for="color">Color</label>
+                <input type="text" id="color" formControlName="color">
+              </div>
+              <div class="form-group">
+                <label for="size">Size</label>
+                <input type="text" id="size" formControlName="size" placeholder="e.g., S, M, L, XL">
+              </div>
+              <div class="form-group">
+                <label for="weight">Weight</label>
+                <div class="input-group">
+                  <input type="number" id="weight" formControlName="weight" step="0.01" min="0">
+                  <span class="input-group-text">kg</span>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="loading">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid || loading">
+            @if (loading) {
+              <span class="spinner-border spinner-border-sm"></span>
             }
-            <button type="button" class="btn btn-secondary" (click)="addImage()">
-              <i class="fas fa-plus"></i> Add Another Image
-            </button>
-          </div>
+            {{ isEditMode ? 'Update ProductModel' : 'Add ProductModel' }}
+          </button>
         </div>
-
-        <div class="form-section full-width">
-          <h3>Specifications</h3>
-          <div formGroupName="specifications" class="specs-grid">
-            <div class="form-group">
-              <label for="brand">Brand</label>
-              <input type="text" id="brand" formControlName="brand">
-            </div>
-            <div class="form-group">
-              <label for="model">Model</label>
-              <input type="text" id="model" formControlName="model">
-            </div>
-            <div class="form-group">
-              <label for="color">Color</label>
-              <input type="text" id="color" formControlName="color">
-            </div>
-            <div class="form-group">
-              <label for="size">Size</label>
-              <input type="text" id="size" formControlName="size" placeholder="e.g., S, M, L, XL">
-            </div>
-            <div class="form-group">
-              <label for="weight">Weight</label>
-              <div class="input-group">
-                <input type="number" id="weight" formControlName="weight" step="0.01" min="0">
-                <span class="input-group-text">kg</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-actions">
-        <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="loading">
-          Cancel
-        </button>
-        <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid || loading">
-          @if (loading) {
-            <span class="spinner-border spinner-border-sm"></span>
-          }
-          {{ isEditMode ? 'Update ProductModel' : 'Add ProductModel' }}
-        </button>
       </div>
     </form>
   } @else {

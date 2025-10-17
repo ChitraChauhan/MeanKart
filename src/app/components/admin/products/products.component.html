@@ -11,7 +11,7 @@
       type="text"
       [(ngModel)]="searchTerm"
       (keyup)="onSearch()"
-      placeholder="Search products..."
+      placeholder="Search for products..."
       class="search-input">
   </div>
 
@@ -39,7 +39,7 @@
       @for (product of products; track product._id) {
         <div class="product-card">
           <div class="product-image">
-            <img [src]="ASSET_BASE_URL + product.imageUrl[0] || 'assets/placeholder.png'" [alt]="product.name">
+            <img [src]="imageService.getImagePreview(product.imageUrl[0])" [alt]="product.name">
           </div>
           <div class="product-details">
             <h3>{{ product.name }}</h3>

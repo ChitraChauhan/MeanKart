@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { DecimalPipe } from '@angular/common';
-import { environment } from '../../../../environment';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
@@ -10,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Product } from '../../models/product.model';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ImageService } from '../../services/image.service';
 
 @Component({
   selector: 'app-product-list',
@@ -19,11 +19,10 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 })
 export class ProductListComponent implements OnInit {
   products: any[] = [];
-  ASSET_BASE_URL = environment.assetsBaseUrl || 'assets/';
   currentPage = 1;
   totalPages = 1;
   totalItems = 0;
-  pageSize = 8;
+  pageSize = 12;
   searchTerm = '';
   loading = false;
   error: string | null = null;
@@ -36,6 +35,7 @@ export class ProductListComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private notificationService: NotificationService,
+    public imageService: ImageService,
   ) {
     this.searchSubscription = this.searchSubject
       .pipe(debounceTime(1000), distinctUntilChanged())

@@ -15,9 +15,9 @@ export interface UserProfile {
 
 export interface Address {
   _id?: string;
-  fullName: string;
+  name: string;
   phone: string;
-  addressLine1: string;
+  address: string;
   addressLine2?: string;
   city: string;
   state: string;

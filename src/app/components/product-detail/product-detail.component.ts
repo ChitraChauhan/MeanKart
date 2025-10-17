@@ -8,6 +8,7 @@ import { NotificationService } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
 import { PaymentService, RazorpayOrder } from '../../services/payment.service';
 import { UserService } from '../../services/user.service';
+import { ImageService } from '../../services/image.service';
 
 declare var Razorpay: any;
 interface RazorpayResponse {
@@ -27,8 +28,8 @@ export class ProductDetailComponent implements OnInit {
   product: any;
   loading = true;
   error: string | null = null;
-  ASSET_BASE_URL = environment.assetsBaseUrl || 'assets/';
   quantity = 1;
+  currentImageIndex = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,6 +40,7 @@ export class ProductDetailComponent implements OnInit {
     private authService: AuthService,
     private paymentService: PaymentService,
     private userService: UserService,
+    public imageService: ImageService,
   ) {}
 
   ngOnInit(): void {
@@ -243,5 +245,20 @@ export class ProductDetailComponent implements OnInit {
 
   payNow(): void {
     this.checkAddressAndProceed();
+  }
+
+  nextImage(): void {
+    if (this.product?.imageUrl?.length > 1) {
+      this.currentImageIndex =
+        (this.currentImageIndex + 1) % this.product.imageUrl.length;
+    }
+  }
+
+  prevImage(): void {
+    if (this.product?.imageUrl?.length > 1) {
+      this.currentImageIndex =
+        (this.currentImageIndex - 1 + this.product.imageUrl.length) %
+        this.product.imageUrl.length;
+    }
   }
 }

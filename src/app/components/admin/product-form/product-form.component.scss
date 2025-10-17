@@ -156,19 +156,24 @@
   }
 
   .image-preview {
-    margin-top: 1rem;
-    max-width: 200px;
-    max-height: 200px;
-    overflow: hidden;
-    border-radius: 4px;
-    border: 1px solid #e2e8f0;
+  position: relative;
+  display: inline-block;
+  margin: 10px;
+}
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
+.image-preview img {
+  max-width: 150px;
+  max-height: 150px;
+  border: 1px solid #ddd;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.image-preview button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
 
   .specs-grid {
     display: grid;
@@ -258,6 +263,97 @@
       border: 1px solid #f5c6cb;
     }
   }
+
+  /* product-form.component.scss */
+.image-upload-group {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.file-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.file-upload-btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+}
+
+.file-input {
+  display: none; /* Hide the default file input */
+}
+
+.image-preview-container {
+  margin-top: 1rem;
+}
+
+.image-preview {
+  position: relative;
+  display: inline-block;
+  margin-top: 0.5rem;
+
+  img {
+    max-width: 150px;
+    max-height: 150px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 4px;
+  }
+}
+
+.remove-image-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  font-size: 12px;
+
+  &:hover {
+    background-color: #cc0000;
+  }
+}
+
+.add-image-btn-container {
+  margin-top: 1rem;
+}
+
+.max-images-message {
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
 }
 
 @keyframes spin {

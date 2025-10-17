@@ -2,9 +2,10 @@
 
   <button
     (click)="router.navigate(['/products'])"
-    class="back-button"
+    class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
   >
-    ← Back to Products
+    <i class="fas fa-arrow-left mr-2"></i>
+    Back to Products
   </button>
 
   @if (loading) {
@@ -13,12 +14,25 @@
     <div class="error">{{ error }}</div>
   } @else if (product) {
     <div class="product-detail">
-      <div class="product-image">
-        <img
-          [src]="ASSET_BASE_URL + product.imageUrl[0]"
-          [alt]="product.name"
-          class="main-image"
-        >
+      <div class="product-image-carousel">
+        <div class="main-image-container">
+          <img
+            [src]="imageService.getImagePreview(product.imageUrl[currentImageIndex])"
+            [alt]="product.name + ' - Image ' + (currentImageIndex + 1)"
+            class="main-image scale-90 hover:scale-105 transition-transform duration-300"
+          >
+
+          @if (product.imageUrl.length > 1) {
+            <div class="carousel-controls">
+              <button class="carousel-nav prev" (click)="prevImage()" aria-label="Previous image">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button class="carousel-nav next" (click)="nextImage()" aria-label="Next image">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          }
+        </div>
       </div>
 
       <div class="product-info">
@@ -50,7 +64,7 @@
           [class.disabled]="!isInStock()"
           [disabled]="!isInStock()"
         >
-          {{ isInStock() ? 'Add to Cart' : 'Out of Stock' }}
+          <i class="fas fa-shopping-cart"></i> {{ isInStock() ? 'Add to Cart' : 'Out of Stock' }}
         </button>
         @if (isInStock()) {
           <button
@@ -58,7 +72,7 @@
             [disabled]="quantity <= 0"
             class="pay-now-btn"
           >
-            Buy Now
+            <i class="fas fa-bolt"></i> Buy Now
           </button>
         }
       </div>

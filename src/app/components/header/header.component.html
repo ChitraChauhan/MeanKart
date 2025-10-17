@@ -9,31 +9,38 @@
         @if (isAuthenticated) {
           @if (isAdmin) {
             <li>
-              <a routerLink="/admin/dashboard">Users</a>
+              <a routerLink="/admin/dashboard">
+                 <i class="fas fa-user-circle text-lg"></i> Users</a>
             </li>
             <li>
-              <a routerLink="admin/products" class="hover:text-gray-300 transition-colors">Products</a>
+              <a routerLink="admin/products" class="hover:text-gray-300 transition-colors">
+                <i class="fas fa-box-open mr-1"></i>Products</a>
             </li>
           }
         }
 
         @if (!isAdmin) {
           <li>
-            <a routerLink="/products" class="hover:text-gray-300 transition-colors">Products</a>
+            <a routerLink="/products" class="hover:text-gray-300 transition-colors">
+              <i class="fas fa-box-open mr-1"></i> Products
+            </a>
           </li>
           @if (isAuthenticated) {
             <li class="relative">
               <a routerLink="/cart" class="hover:text-gray-300 transition-colors flex items-center">
+                <i class="fas fa-shopping-cart mr-1"></i>
                 <span>Cart</span>
                 @if (cartItemCount > 0) {
                   <span class="ml-1 bg-indigo-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                  {{ cartItemCount }}
-                </span>
+                    {{ cartItemCount }}
+                  </span>
                 }
               </a>
             </li>
             <li>
-              <a routerLink="/my-orders" class="hover:text-gray-300 transition-colors">Orders</a>
+              <a routerLink="/my-orders" class="hover:text-gray-300 transition-colors">
+                <i class="fas fa-clipboard-list mr-1"></i> Orders
+              </a>
             </li>
           }
         }
@@ -53,16 +60,16 @@
           <li class="relative group">
             <a routerLink="/profile" class="flex items-center hover:text-gray-300 transition-colors">
               <i class="fas fa-user-circle text-xl mr-1"></i>
-              <span class="ml-1">{{ userName || 'Profile' }}</span>
+              <span class="ml-1">My Profile</span>
             </a>
           </li>
           <li class="flex items-center space-x-4">
             <button
               (click)="logout()"
-              class="flex items-center text-gray-300 hover:text-white transition-colors"
+              class="flex items-center hover:text-gray-300 transition-colors"
               title="Logout"
             >
-              <i class="fas fa-sign-out-alt"></i>
+              <span>{{userName}}</span> <i class="fas fa-sign-out-alt pl-2"></i>
             </button>
           </li>
         }

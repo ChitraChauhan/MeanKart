@@ -12,12 +12,7 @@
 
   @if (!isLoading && orders.length === 0) {
     <div class="bg-white rounded-lg shadow p-8 text-center">
-      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2
-                 m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0
-                 012 2v2M7 7h10"></path>
-      </svg>
+      <i class="fas fa-box-open text-4xl text-gray-400 mb-4"></i>
       <h3 class="mt-2 text-lg font-medium text-gray-900">No orders yet</h3>
       <p class="mt-1 text-gray-500">You haven't placed any orders yet.</p>
       <div class="mt-6">
@@ -70,14 +65,7 @@
               <div class="mt-2 sm:flex sm:justify-between">
                 <div class="sm:flex">
                   <p class="flex items-center text-sm text-gray-500">
-                    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
-                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                         fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd"
-                            d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7
-                               0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                            clip-rule="evenodd"/>
-                    </svg>
+                    <i class="fas fa-map-marker-alt text-gray-400 mr-1.5"></i>
                     {{ order?.shippingAddress?.city }}, {{ order?.shippingAddress?.state }}
                   </p>
                 </div>
@@ -93,7 +81,7 @@
               <div class="mt-4 flex items-center justify-between">
                 <div class="flex -space-x-2 overflow-hidden items-center">
                   @for (item of order.items.slice(0, 4); track $index) {
-                    <img [src]="ASSET_BASE_URL + item.image || 'assets/images/placeholder-product.png'"
+                    <img [src]="imageService.getImagePreview(item.image)"
                          [alt]="item.name"
                          class="h-20 w-20 ring-2 ring-white p-2">
                   }
@@ -154,14 +142,7 @@
                      bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50
                      disabled:cursor-not-allowed">
               <span class="sr-only">Previous</span>
-              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                   fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293
-                         3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0
-                         010-1.414l4-4a1 1 0 011.414 0z"
-                      clip-rule="evenodd"/>
-              </svg>
+              <i class="fas fa-chevron-left"></i>
             </button>
 
             @for (page of getPaginationArray(); track $index) {
@@ -197,14 +178,7 @@
                      bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50
                      disabled:cursor-not-allowed">
               <span class="sr-only">Next</span>
-              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
-                   viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd"
-                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10
-                         7.293 6.707a1 1 0 011.414-1.414l4 4a1 1
-                         0 010 1.414l-4 4a1 1 0-1.414 0z"
-                      clip-rule="evenodd"/>
-              </svg>
+              <i class="fas fa-chevron-right"></i>
             </button>
           </nav>
         </div>

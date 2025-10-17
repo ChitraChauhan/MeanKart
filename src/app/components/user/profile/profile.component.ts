@@ -13,9 +13,9 @@ import { NotificationService } from '../../../services/notification.service';
 
 export interface Address {
   _id?: string;
-  fullName: string;
+  name: string;
   phone: string;
-  addressLine1: string;
+  address: string;
   addressLine2?: string;
   city: string;
   state: string;
@@ -90,9 +90,9 @@ export class ProfileComponent implements OnInit {
 
   private initAddressForm(): void {
     this.addressForm = this.fb.group({
-      fullName: ['', [Validators.required]],
+      name: ['', [Validators.required]],
       phone: ['', [Validators.required, Validators.pattern('^[0-9]{10,15}$')]],
-      addressLine1: ['', [Validators.required]],
+      address: ['', [Validators.required]],
       addressLine2: [''],
       city: ['', [Validators.required]],
       state: ['', [Validators.required]],

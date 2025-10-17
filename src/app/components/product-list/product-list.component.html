@@ -6,7 +6,7 @@
       type="text"
       [(ngModel)]="searchTerm"
       (keyup)="onSearch()"
-      placeholder="Search products...">
+      placeholder="Search for products...">
   </div>
 
   @if (loading) {
@@ -39,9 +39,9 @@
           >
             <div class="h-48 bg-gray-100 overflow-hidden">
               <img
-                [src]="ASSET_BASE_URL + product.imageUrl[0] || 'https://via.placeholder.com/300x200?text=No+Image'"
+                [src]="imageService.getImagePreview(product.imageUrl[0])"
                 [alt]="product.name"
-                class="w-full h-full object-cover scale-90 hover:scale-105 transition-transform duration-300"
+                class="w-full h-full object-cover"
                 (click)="viewProduct(product._id)"
               />
             </div>
@@ -66,21 +66,7 @@
                       (click)="$event.stopPropagation(); addToCart(product)"
                       class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg transition-colors duration-200 flex items-center shadow-md hover:shadow-lg"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 mr-1"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m-10 0h10m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                        />
-                      </svg>
-                      Add to Cart
+                      <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
                     </button>
                   }
                 </div>

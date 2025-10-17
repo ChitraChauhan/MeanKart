@@ -8,7 +8,7 @@ import { Product } from '../models/product.model';
   providedIn: 'root',
 })
 export class AdminProductService {
-  private apiUrl = `${environment.apiUrl}/api/admin/products`;
+  private apiUrl = `${environment.apiUrl}/api/products`;
 
   constructor(private http: HttpClient) {}
 
@@ -24,12 +24,20 @@ export class AdminProductService {
     return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
 
-  createProduct(product: Partial<Product>): Observable<Product> {
-    return this.http.post<Product>(this.apiUrl, product);
+  createProduct(productData: any): Observable<Product> {
+    return this.http.post<Product>(this.apiUrl, productData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   }
 
-  updateProduct(id: string, product: Partial<Product>): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/${id}`, product);
+  updateProduct(id: string, productData: any): Observable<Product> {
+    return this.http.put<Product>(`${this.apiUrl}/${id}`, productData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   }
 
   deleteProduct(id: string): Observable<void> {
