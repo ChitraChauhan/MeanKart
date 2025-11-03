@@ -49,7 +49,6 @@
                 }
               ],
               "outputHashing": "all",
-              "buildOptimizer": true,
               "optimization": true,
               "fileReplacements": [
                 {
